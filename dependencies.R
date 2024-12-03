@@ -1,3 +1,4 @@
+install.packages('pkgdown', repos = "http://cran.us.r-project.org")
 install.packages('devtools', repos = "http://cran.us.r-project.org")
 
 print("PRINT R SESSION")
