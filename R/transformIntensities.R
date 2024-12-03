@@ -41,8 +41,8 @@ transformIntensities <- function(intensitiesTable,
 
   # Step 7. Return final result
   return(list(
-    Protein_Intensity = dataLong, #name should be fixed
-    Protein_Metadata = featuresMetadataTable, #name should be fixed like this
+    intensity = dataLong, #name should be fixed
+    metadata = featuresMetadataTable, #name should be fixed like this
     runtimeMetadata = runtimeMetadata
   ))
 }

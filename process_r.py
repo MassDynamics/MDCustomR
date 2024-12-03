@@ -19,10 +19,32 @@ class MDCustomRParams(InputParams):
       default='none'
   )
 
-@md_r(r_file="./process.R", r_function="process")
+
+SOURCE_TO_DATA_MAP = {
+        "protein": {
+            "intensity": "Protein_Intensity",
+            "metadata": "Protein_Metadata"
+        },
+        "peptide": {
+            "intensity": "Peptide_Intensity",
+            "metadata": "Peptide_Metadata"
+        }
+    }
+
+
+@md_r(r_file="./process.R", r_function="run_custom_r")
 def prepare_test_run_r(input_data_sets: list[InputDataset], params: MDCustomRParams, \
         output_dataset_type: DatasetType) -> RPreparation: 
+          
+    intensity_source = params.intensity_source
+    if intensity_source not in SOURCE_TO_DATA_MAP:
+      raise ValueError(f"Invalid intensity source: {intensity_source}")
+  
+    data_keys = SOURCE_TO_DATA_MAP[intensity_source]
+    intensity_table_name = data_keys["intensity"]
+    metadata_table_name = data_keys["metadata"]
+          
     return RPreparation(data_frames = [ \
-            input_data_sets[0].table_data_by_name("Protein_Intensity"), \
-            input_data_sets[0].table_data_by_name("Protein_Metadata")], \
-            r_args=[params.message])
+            intensity_table_name, \
+            metadata_table_name, \
+            r_args=[params.normalisation_methods, intensity_source])
