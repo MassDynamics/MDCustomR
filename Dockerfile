@@ -5,3 +5,9 @@ RUN yum -y update
 
 ADD process.R .
 ADD process_r.py .
+
+ADD ./dependencies.R .
+RUN Rscript dependencies.R
+
+ADD ./install.R .
+RUN Rscript install.R
