@@ -18,8 +18,12 @@ intensity dataset.
 
 Create an R workflow, which can either be a package or a simple
 function. The example in this repository is implemented as an R package,
-with the workflow located at `./R/transformIntensities.R`. This package
-depends on the `limma` and `tidyr` R packages.
+with the workflow located at `./R/transformIntensities.R`.
+
+This package depends on the `limma` and `tidyr` R packages.
+
+**XXXThe user will need to provide the R version - we need to decide how
+we are going to handle **
 
 The main R function should accept an intensity table and a metadata
 table as inputs. Additional parameters of your choice can also be
