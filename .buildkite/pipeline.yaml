@@ -17,9 +17,9 @@ steps:
       AWS_PROFILE: "eb-services-cli"
       BUILD_NUMBER: "${BUILDKITE_BUILD_NUMBER}"
       DOCKER_FILE: "Dockerfile"
-      REPO_NAME: "MDCustomR"
+      REPO_NAME: "md_custom_r"
       VERSION: "0.0.1"
     agents:
       ebdeploy: true
     concurrency: 1
-    concurrency_group: "md_dataset_package/docker"
+    concurrency_group: "md_custom_r/docker"
