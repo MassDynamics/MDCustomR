@@ -3,6 +3,7 @@ FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package:0.3.4-
 
 RUN yum -y update
 RUN yum install harfbuzz-devel fribidi-devel libpng-devel
+RUN yum install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev
 
 ADD process.R .
 ADD process_r.py .
