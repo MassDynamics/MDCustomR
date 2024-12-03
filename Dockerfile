@@ -2,7 +2,7 @@ FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package:0.3.4-
 # FROM md_dataset_package-linux:latest
 
 RUN yum -y update
-RUN yum install harfbuzz-devel fribidi-devel libpng-devel libtiff-4
+RUN yum install harfbuzz-devel fribidi-devel libpng-devel libtiff-devel
 
 RUN yum install freetype-devel libjpeg-devel pkg-config
 
