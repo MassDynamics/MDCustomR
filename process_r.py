@@ -44,7 +44,7 @@ def prepare_input_transform_intensities(input_data_sets: list[InputDataset], par
     intensity_table_name = data_keys["intensity"]
     metadata_table_name = data_keys["metadata"]
           
-    return RInputPreparation(data_frames = [ \
+    return RPreparation(data_frames = [ \
             intensity_table_name, \
             metadata_table_name, \
             r_args=[params.normalisation_methods, intensity_source])
