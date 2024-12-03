@@ -15,7 +15,7 @@ class MDCustomRParams(InputParams):
     "cyclicloess"
   ] = Field(
       title='Intensity Source',
-      description="",
+      description="Normalisation method passed to the limma normalizeBetweenArrays() function.",
       default='none'
   )
 

@@ -32,6 +32,6 @@ run_transform_intensities <- function(intensity, metadata, normMethod, intensity
 
   return(list(intensity_table_name = intensity,
               metadata_table_name = metadata,
-              runtime_metadata = output$runtimeMetadata))
+              Runtime_Metadata = output$runtimeMetadata))
 
 }
