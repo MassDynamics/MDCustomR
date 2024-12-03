@@ -1,0 +1,24 @@
+steps:
+  ################################################################################
+  ## Image
+  ################################################################################
+  - block: ":warning: build and push docker images?"
+    key: block_image
+    depends_on: prep
+    branches: "!main"
+
+  - label: ":docker: dataset package: build & push image"
+    key: build_python_image
+    depends_on: ["block_image", "prep"]
+    command: scripts/build-push
+    env:
+      AWS_REGION: "ap-southeast-2"
+      AWS_DEFAULT_REGION: "ap-southeast-2"
+      AWS_PROFILE: "eb-services-cli"
+      BUILD_NUMBER: "${BUILDKITE_BUILD_NUMBER}"
+      DOCKER_FILE: "Dockerfile"
+      REPO_NAME: "MDCustomR"
+    agents:
+      ebdeploy: true
+    concurrency: 1
+    concurrency_group: "md_dataset_package/docker"
