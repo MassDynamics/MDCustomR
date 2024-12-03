@@ -3,7 +3,8 @@ FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package:0.3.4-
 
 RUN yum -y update
 RUN yum install harfbuzz-devel fribidi-devel libpng-devel
-RUN yum install libtiff-devel
+RUN dnf install -y epel-release
+RUN dnf install -y libtiff-devel
 RUN yum install freetype-devel libjpeg-devel pkg-config
 
 RUN yum install -y gcc gcc-c++ make automake autoconf libtool
