@@ -32,8 +32,8 @@ SOURCE_TO_DATA_MAP = {
     }
 
 
-@md_r(r_file="./process.R", r_function="run_custom_r")
-def prepare_test_run_r(input_data_sets: list[InputDataset], params: MDCustomRParams, \
+@md_r(r_file="./process.R", r_function="run_transform_intensities")
+def prepare_input_transform_intensities(input_data_sets: list[InputDataset], params: MDCustomRParams, \
         output_dataset_type: DatasetType) -> RPreparation: 
           
     intensity_source = params.intensity_source
@@ -44,7 +44,7 @@ def prepare_test_run_r(input_data_sets: list[InputDataset], params: MDCustomRPar
     intensity_table_name = data_keys["intensity"]
     metadata_table_name = data_keys["metadata"]
           
-    return RPreparation(data_frames = [ \
+    return RInputPreparation(data_frames = [ \
             intensity_table_name, \
             metadata_table_name, \
             r_args=[params.normalisation_methods, intensity_source])
