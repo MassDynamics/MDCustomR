@@ -1,0 +1,61 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: md-custom-r-deploy
+  labels:
+    app: md-custom-r
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 1
+  ttlSecondsAfterFinished: 1800
+  template:
+    metadata:
+      labels:
+        app: md-custom-r
+        env: {{ .Values.environment.name }}
+        node-group: fargate
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ .Values.environment.serviceAccountName }}
+      containers:
+        - name: md-custom-r-deploy
+          image: "{{ .Values.image }}"
+          command: ["python", "src/deploy.py"]
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "1000m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          env:
+            - name: DOCKER_IMAGE
+              value: "{{ .Values.image }}"
+            - name: PREFECT_DEPLOYMENT_MEMORY_REQUESTS
+              value: "8Gi"
+            - name: PREFECT_DEPLOYMENT_CPU_REQUESTS
+              value: "4000m"
+            - name: PREFECT_DEPLOYMENT_MEMORY_LIMITS
+              value: "8Gi"
+            - name: PREFECT_DEPLOYMENT_CPU_LIMITS
+              value: "4000m"
+            - name: STAGE
+              value: "{{ .Values.environment.name }}"
+            - name: AWS_REGION
+              value: "{{ .Values.environment.awsRegion }}"
+            - name: INITIAL_DATA_BUCKET_NAME
+              value: "{{ .Values.environment.sourceBucket }}"
+            - name: PREFECT_RESULTS_BUCKET
+              value: "{{ .Values.environment.prefect.resultsBucket }}"
+            - name: JOB_NAME
+              value: "{{ .Values.environment.jobName }}"
+            - name: FLOW
+              value: "{{ .Values.environment.flow }}"
+            - name: FLOW_PACKAGE
+              value: "{{ .Values.environment.flowPackage }}"
+            - name: DEPLOYMENT_NAME
+              value: "{{ .Values.environment.deploymentName }}"
+            - name: DATASET_RUN_TYPE
+              value: "{{ .Values.environment.datasetRunType }}"

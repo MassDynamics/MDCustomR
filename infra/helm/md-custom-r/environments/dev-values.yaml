@@ -1,0 +1,6 @@
+environment:
+  name: development
+  awsRegion: ap-southeast-2
+  serviceAccountName: data-set-service-kube-job-sa
+  sourceBucket: production-au-md-experiments-upload-7c5ca47a7f42b166
+  resultsBucket: md-development-data-set-data

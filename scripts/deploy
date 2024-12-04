@@ -1,0 +1,14 @@
+#!/bin/bash
+
+[[ -z "$ENVIRONMENT" ]] && echo "ENVIRONMENT must be set" && exit 1
+
+image=$(buildkite-agent meta-data get "docker-image")
+
+namespace="md"
+release_name="md-custom-r"
+chart_dir="infra/helm/md-custom-r"
+
+helm upgrade --install $release_name $chart_dir --namespace $namespace \
+  -f ./infra/helm/md-custom-r/values.yaml \
+  -f ./infra/helm/md-custom-r/environments/${ENVIRONMENT}-values.yaml \
+  --set image=$image

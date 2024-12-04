@@ -39,3 +39,5 @@ docker push "${registry}/${image_tag}"
 docker push "${registry}/${image_tag_latest}"
 
 echo "+++ Image tag: ${image_tag}"
+
+buildkite-agent meta-data set "docker-image" "${registry}/${image_tag}"

@@ -23,3 +23,20 @@ steps:
       ebdeploy: true
     concurrency: 1
     concurrency_group: "md_custom_r/docker"
+
+  - wait: ~
+    key: prep
+
+  - label: ':helm: development: deploy'
+    key: deploy_dev
+    depends_on: prep
+    commands: scripts/deploy
+    env:
+      ENVIRONMENT_NAME: 'development'
+    retry:
+      manual:
+        permit_on_passed: true
+    agents:
+      terraform: true
+    concurrency: 1
+    concurrency_group: 'development/converter/deploy'

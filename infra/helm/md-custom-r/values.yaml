@@ -1,0 +1,14 @@
+# Default values for md-custom-r.
+#
+image:
+environment:
+  name:
+  jobName: MD custom R
+  awsRegion:
+  serviceAccountName:
+  sourceBucket:
+  resultsBucket:
+  flow: prepare_input_transform_intensities
+  flowPackage: process_r
+  deploymentName: process_r_deployment
+  datasetRunType: INTENSITY
