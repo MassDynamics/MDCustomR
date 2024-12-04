@@ -48,7 +48,7 @@ spec:
             - name: INITIAL_DATA_BUCKET_NAME
               value: "{{ .Values.environment.sourceBucket }}"
             - name: PREFECT_RESULTS_BUCKET
-              value: "{{ .Values.environment.prefect.resultsBucket }}"
+              value: "{{ .Values.environment.resultsBucket }}"
             - name: JOB_NAME
               value: "{{ .Values.environment.jobName }}"
             - name: FLOW
