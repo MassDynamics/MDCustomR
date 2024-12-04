@@ -32,7 +32,7 @@ steps:
     depends_on: prep
     commands: scripts/deploy
     env:
-      ENVIRONMENT_NAME: 'development'
+      ENVIRONMENT: 'development'
       AWS_PROFILE: 'tf-development-cli'
     retry:
       manual:
