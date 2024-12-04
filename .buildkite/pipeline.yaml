@@ -33,6 +33,7 @@ steps:
     commands: scripts/deploy
     env:
       ENVIRONMENT_NAME: 'development'
+      AWS_PROFILE: 'tf-development-cli'
     retry:
       manual:
         permit_on_passed: true

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 [[ -z "$ENVIRONMENT" ]] && echo "ENVIRONMENT must be set" && exit 1
+[[ -z "$AWS_PROFILE" ]] && echo "AWS_PROFILE must be set" && exit 1
 
 image=$(buildkite-agent meta-data get "docker-image")
 
