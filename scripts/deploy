@@ -9,6 +9,8 @@ namespace="md"
 release_name="md-custom-r"
 chart_dir="infra/helm/md-custom-r"
 
+aws eks update-kubeconfig --region ap-southeast-2 --name md-eks-cluster
+
 helm upgrade --install $release_name $chart_dir --namespace $namespace \
   -f ./infra/helm/md-custom-r/values.yaml \
   -f ./infra/helm/md-custom-r/environments/${ENVIRONMENT}-values.yaml \
