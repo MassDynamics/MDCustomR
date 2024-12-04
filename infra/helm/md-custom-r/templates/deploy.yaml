@@ -22,7 +22,7 @@ spec:
       containers:
         - name: md-custom-r-deploy
           image: "{{ .Values.image }}"
-          command: ["python", "src/deploy.py"]
+          command: ["md-dataset-deploy"]
           resources:
             requests:
               memory: "1Gi"
@@ -31,6 +31,8 @@ spec:
               memory: "1Gi"
               cpu: "1000m"
           env:
+            - name: STAGE
+              value: "{{ .Values.environment.name }}"
             - name: DOCKER_IMAGE
               value: "{{ .Values.image }}"
             - name: PREFECT_DEPLOYMENT_MEMORY_REQUESTS
@@ -41,8 +43,6 @@ spec:
               value: "8Gi"
             - name: PREFECT_DEPLOYMENT_CPU_LIMITS
               value: "4000m"
-            - name: STAGE
-              value: "{{ .Values.environment.name }}"
             - name: AWS_REGION
               value: "{{ .Values.environment.awsRegion }}"
             - name: INITIAL_DATA_BUCKET_NAME
