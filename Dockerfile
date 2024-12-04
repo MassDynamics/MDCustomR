@@ -9,11 +9,14 @@ RUN yum install freetype-devel libjpeg-devel pkg-config
 RUN yum install -y gcc gcc-c++ make automake autoconf libtool
 RUN yum install libcurl-devel libxml2-devel openssl-devel
 
-ADD process.R .
-ADD process_r.py .
+COPY process.R .
+COPY process_r.py .
+COPY R/ ./R/
+COPY DESCRIPTION .
+COPY NAMESPACE .
 
-ADD ./dependencies.R .
+COPY ./dependencies.R .
 RUN Rscript dependencies.R
 
-ADD ./install.R .
+COPY ./install.R .
 RUN Rscript install.R
