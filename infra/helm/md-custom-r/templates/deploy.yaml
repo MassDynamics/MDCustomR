@@ -45,6 +45,8 @@ spec:
               value: "4000m"
             - name: AWS_REGION
               value: "{{ .Values.environment.awsRegion }}"
+            - name: K8_SERVICE_ACCOUNT_NAME
+              value: "{{ .Values.prefect.serviceAccountName }}"
             - name: INITIAL_DATA_BUCKET_NAME
               value: "{{ .Values.environment.sourceBucket }}"
             - name: PREFECT_RESULTS_BUCKET
