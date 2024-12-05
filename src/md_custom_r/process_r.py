@@ -18,12 +18,12 @@ class MDCustomRParams(InputParams):
   )
 
   normalisation_methods: Literal[
-    "none"
-    "scale"
+    "none",
+    "scale",
     "quantile",
     "cyclicloess"
   ] = Field(
-      title='Intensity Source',
+      title='Normalisation Methods',
       description="Normalisation method passed to the limma normalizeBetweenArrays() function.",
       default='none'
   )
