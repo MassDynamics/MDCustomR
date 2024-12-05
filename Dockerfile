@@ -15,7 +15,8 @@ RUN Rscript dependencies.R
 COPY DESCRIPTION ./install.R .
 RUN Rscript install.R
 
-COPY NAMESPACE LICENSE README.md process.R  process_r.py .
+COPY NAMESPACE LICENSE README.md .
+COPY src/ ./src/
 COPY R/ ./R/
 
-RUN pip install
+RUN pip install .
