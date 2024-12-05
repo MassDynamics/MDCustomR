@@ -9,6 +9,6 @@ environment:
   sourceBucket:
   resultsBucket:
   flow: prepare_input_transform_intensities
-  flowPackage: process_r
+  flowPackage: md_custom_r.process_r
   deploymentName: process_r_deployment
   datasetRunType: INTENSITY

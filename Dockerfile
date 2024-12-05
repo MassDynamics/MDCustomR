@@ -12,12 +12,10 @@ RUN yum install libcurl-devel libxml2-devel openssl-devel
 COPY ./dependencies.R .
 RUN Rscript dependencies.R
 
-COPY DESCRIPTION .
-
-COPY ./install.R .
+COPY DESCRIPTION ./install.R .
 RUN Rscript install.R
 
-COPY NAMESPACE .
-COPY process.R .
-COPY process_r.py .
+COPY NAMESPACE LICENSE README.md process.R  process_r.py .
 COPY R/ ./R/
+
+RUN pip install
