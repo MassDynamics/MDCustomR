@@ -22,7 +22,7 @@ spec:
       containers:
         - name: md-custom-r-deploy
           image: "{{ .Values.image }}"
-          command: ["md-datset-deploy"]
+          command: ["md-dataset-deploy"]
           resources:
             requests:
               memory: "1Gi"
