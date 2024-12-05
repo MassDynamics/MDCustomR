@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: md-custom-r-deploy
+  name: md-custom-r-deploy-{{ now | date "20060102150405" }}
   labels:
     app: md-custom-r-deploy
 spec:
