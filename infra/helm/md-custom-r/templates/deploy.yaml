@@ -4,7 +4,7 @@ kind: Job
 metadata:
   name: md-custom-r-deploy
   labels:
-    app: md-custom-r
+    app: md-custom-r-deploy
 spec:
   completions: 1
   parallelism: 1
@@ -13,7 +13,7 @@ spec:
   template:
     metadata:
       labels:
-        app: md-custom-r
+        app: md-custom-r-deploy
         env: {{ .Values.environment.name }}
         node-group: fargate
     spec:
