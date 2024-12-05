@@ -15,4 +15,4 @@ helm upgrade --install $release_name $chart_dir --namespace $namespace \
   -f ./infra/helm/md-custom-r/values.yaml \
   -f ./infra/helm/md-custom-r/environments/${ENVIRONMENT}-values.yaml \
   --set image=$image \
-  --force
+  --dry-run --debug
