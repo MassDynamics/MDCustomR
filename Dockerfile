@@ -1,4 +1,4 @@
-FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package:0.3.5-69
+FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package:0.3.5-70
 # FROM md_dataset_package-linux:latest
 
 RUN yum -y update
