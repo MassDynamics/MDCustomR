@@ -1,4 +1,4 @@
-FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package:0.3.5-68
+FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package:0.3.5-69
 # FROM md_dataset_package-linux:latest
 
 RUN yum -y update
@@ -13,10 +13,11 @@ COPY ./dependencies.R .
 RUN Rscript dependencies.R
 
 COPY DESCRIPTION .
+COPY NAMESPACE .
+
 COPY ./install.R .
 RUN Rscript install.R
 
 COPY process.R .
 COPY process_r.py .
 COPY R/ ./R/
-COPY NAMESPACE .
