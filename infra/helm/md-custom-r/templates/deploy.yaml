@@ -53,6 +53,8 @@ spec:
               value: "{{ .Values.prefect.apiUrl }}"
             - name: PREFECT_RESULTS_BUCKET
               value: "{{ .Values.environment.resultsBucket }}"
+            - name: HONEYBADGER_KEY
+              value: "n/a"
             - name: JOB_NAME
               value: "{{ .Values.environment.jobName }}"
             - name: FLOW
