@@ -12,3 +12,5 @@ environment:
   flowPackage: md_custom_r.process_r
   deploymentName: process_r_deployment
   datasetRunType: INTENSITY
+prefect:
+  apiUrl: http://prefect-server:4200/api
