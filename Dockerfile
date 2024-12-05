@@ -19,4 +19,4 @@ COPY NAMESPACE LICENSE README.md .
 COPY src/ ./src/
 COPY R/ ./R/
 
-RUN pip install .
+RUN pip install -e .
