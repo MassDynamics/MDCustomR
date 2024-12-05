@@ -1,3 +1,12 @@
+from pydantic import Field
+from typing import Literal
+
+from md_dataset.process import md_r
+from md_dataset.models.types import DatasetType
+from md_dataset.models.types import InputParams
+from md_dataset.models.types import IntensityInputDataset
+from md_dataset.models.types import RPreparation
+
 class MDCustomRParams(InputParams):
   intensity_source: Literal[
       "protein",
@@ -33,7 +42,7 @@ SOURCE_TO_DATA_MAP = {
 
 
 @md_r(r_file="./process.R", r_function="run_transform_intensities")
-def prepare_input_transform_intensities(input_data_sets: list[InputDataset], params: MDCustomRParams, \
+def prepare_input_transform_intensities(input_data_sets: list[IntensityInputDataset], params: MDCustomRParams, \
         output_dataset_type: DatasetType) -> RPreparation:
 
     intensity_source = params.intensity_source
