@@ -13,11 +13,11 @@ COPY ./dependencies.R .
 RUN Rscript dependencies.R
 
 COPY DESCRIPTION .
-COPY NAMESPACE .
 
 COPY ./install.R .
 RUN Rscript install.R
 
+COPY NAMESPACE .
 COPY process.R .
 COPY process_r.py .
 COPY R/ ./R/
