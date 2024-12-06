@@ -10,7 +10,7 @@ environment:
   resultsBucket:
   flow: prepare_input_transform_intensities
   flowPackage: md_custom_r.process_r
-  deploymentName: process_r_deployment
+  deploymentName: process-r-deployment
   datasetRunType: INTENSITY
 prefect:
   apiUrl: http://prefect-server:4200/api
