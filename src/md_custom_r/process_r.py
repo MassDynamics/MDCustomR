@@ -7,6 +7,7 @@ from md_dataset.models.types import BiomolecularSource
 from md_dataset.models.types import DatasetType
 from md_dataset.models.types import InputParams
 from md_dataset.models.types import IntensityInputDataset
+from md_dataset.models.types import IntensityTableType
 from md_dataset.models.types import RPreparation
 
 class MDCustomRParams(InputParams):
@@ -46,4 +47,4 @@ def prepare_input_transform_intensities(
     return RPreparation(data_frames = [ \
             intensity_table, \
             metadata_table], \
-            r_args=[params.normalisation_methods, intensity_source])
+            r_args=[params.normalisation_methods, intensity_source.value])
