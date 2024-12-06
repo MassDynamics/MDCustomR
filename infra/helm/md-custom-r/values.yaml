@@ -3,7 +3,7 @@
 image:
 environment:
   name:
-  jobName: MD custom R
+  jobName: md custom r
   awsRegion:
   serviceAccountName:
   sourceBucket:
