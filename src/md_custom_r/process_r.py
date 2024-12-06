@@ -39,8 +39,8 @@ def prepare_input_transform_intensities(
         params: MDCustomRParams,
         output_dataset_type: DatasetType) -> RPreparation:
 
-    intensity_source = params.intensity_source
-    if intensity_source != BiomolecularSource.PROTEIN.value or intensity_source != BiomolecularSource.PEPTIDE.value:
+    intensity_source = BiomolecularSource(params.intensity_source)
+    if intensity_source != BiomolecularSource.PROTEIN or intensity_source != BiomolecularSource.PEPTIDE:
       raise ValueError(f"Invalid intensity source: {intensity_source}")
 
     intensity_table = input_datasets[0].table(intensity_source, IntensityTableType.INTENSITY)
