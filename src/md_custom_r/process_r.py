@@ -1,4 +1,5 @@
 from pydantic import Field
+from pydantic import conlist
 from typing import Literal
 
 from md_dataset.process import md_r
@@ -31,15 +32,19 @@ class MDCustomRParams(InputParams):
 
 
 @md_r(r_file="./process.R", r_function="run_transform_intensities")
-def prepare_input_transform_intensities(input_datasets: list[IntensityInputDataset], params: MDCustomRParams, \
+def prepare_input_transform_intensities(
+        input_datasets: conlist(IntensityInputDataset,
+                                min_items=1,
+                                max_items=1),
+        params: MDCustomRParams,
         output_dataset_type: DatasetType) -> RPreparation:
 
     intensity_source = params.intensity_source
     if intensity_source != BiomolecularSource.PROTEIN.value or intensity_source != BiomolecularSource.PEPTIDE.value:
       raise ValueError(f"Invalid intensity source: {intensity_source}")
 
-    intensity_table = input_datasets[0].table(params.source, IntensityTableType.INTENSITY)
-    metadata_table = input_datasets[0].table(params.source, IntensityTableType.METADATA)
+    intensity_table = input_datasets[0].table(intensity_source, IntensityTableType.INTENSITY)
+    metadata_table = input_datasets[0].table(intensity_source, IntensityTableType.METADATA)
 
     return RPreparation(data_frames = [ \
             intensity_table, \
