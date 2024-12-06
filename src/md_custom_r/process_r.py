@@ -32,7 +32,7 @@ class MDCustomRParams(InputParams):
   )
 
 
-@md_r(r_file="./process.R", r_function="run_transform_intensities")
+@md_r(r_file="./src/process.R", r_function="run_transform_intensities")
 def prepare_input_transform_intensities(
         input_datasets: conlist(IntensityInputDataset,
                                 min_items=1,
