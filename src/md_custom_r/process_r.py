@@ -2,6 +2,7 @@ from pydantic import Field
 from typing import Literal
 
 from md_dataset.process import md_r
+from md_dataset.models.types import BiomolecularSource
 from md_dataset.models.types import DatasetType
 from md_dataset.models.types import InputParams
 from md_dataset.models.types import IntensityInputDataset
@@ -29,31 +30,18 @@ class MDCustomRParams(InputParams):
   )
 
 
-SOURCE_TO_DATA_MAP = {
-        "protein": {
-            "intensity": "Protein_Intensity",
-            "metadata": "Protein_Metadata"
-        },
-        "peptide": {
-            "intensity": "Peptide_Intensity",
-            "metadata": "Peptide_Metadata"
-        }
-    }
-
-
 @md_r(r_file="./process.R", r_function="run_transform_intensities")
-def prepare_input_transform_intensities(input_data_sets: list[IntensityInputDataset], params: MDCustomRParams, \
+def prepare_input_transform_intensities(input_datasets: list[IntensityInputDataset], params: MDCustomRParams, \
         output_dataset_type: DatasetType) -> RPreparation:
 
     intensity_source = params.intensity_source
-    if intensity_source not in SOURCE_TO_DATA_MAP:
+    if intensity_source != BiomolecularSource.PROTEIN.value or intensity_source != BiomolecularSource.PEPTIDE.value:
       raise ValueError(f"Invalid intensity source: {intensity_source}")
 
-    data_keys = SOURCE_TO_DATA_MAP[intensity_source]
-    intensity_table_name = data_keys["intensity"]
-    metadata_table_name = data_keys["metadata"]
+    intensity_table = input_datasets[0].table(params.source, IntensityTableType.INTENSITY)
+    metadata_table = input_datasets[0].table(params.source, IntensityTableType.METADATA)
 
     return RPreparation(data_frames = [ \
-            intensity_table_name, \
-            metadata_table_name], \
+            intensity_table, \
+            metadata_table], \
             r_args=[params.normalisation_methods, intensity_source])
