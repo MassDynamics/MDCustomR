@@ -1,6 +1,6 @@
-library(MDCustomR)
-
 run_transform_intensities <- function(intensity, metadata, normMethod, intensitySource){
+
+  library(MDCustomR)
 
   SOURCE_TO_DATA_MAP <- list(
     protein = list(
@@ -13,8 +13,14 @@ run_transform_intensities <- function(intensity, metadata, normMethod, intensity
     )
   )
 
+
+  print("Versions")
+  print(packageVersion("MDCustomR"))
+
   print("All functions")
   print(ls("package:MDCustomR"))
+
+
   output <- MDCustomR::transformIntensities(intensities = protein_intensity,
                                  metadata = protein_metadata,
                                  featureColname = "GroupId",
