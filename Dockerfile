@@ -13,10 +13,10 @@ COPY ./dependencies.R .
 RUN Rscript dependencies.R
 
 COPY DESCRIPTION ./install.R .
-RUN Rscript install.R
-
 COPY NAMESPACE LICENSE README.md .
 COPY src/ ./src/
 COPY R/ ./R/
+
+RUN Rscript install.R
 
 RUN pip install -e .
