@@ -45,4 +45,4 @@ def prepare_input_transform_intensities(
     return RPreparation(data_frames = [ \
             intensity_table.data, \
             metadata_table.data], \
-            r_args=[params.normalisation_methods, 'Protein']) # hardcoded for the moment
+            r_args=[params.normalisation_methods, 'protein']) # hardcoded for the moment
