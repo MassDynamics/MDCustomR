@@ -5,21 +5,21 @@
 \title{Transform intensities}
 \usage{
 transformIntensities(
-  intensitiesTable,
-  featuresMetadataTable,
-  featureColname,
-  replicateColname,
+  intensities,
+  metadata,
+  featureColname = "GroupId",
+  replicateColname = "replicate",
   normMethod
 )
 }
 \arguments{
-\item{intensitiesTable}{data.frame. Mass Dynamics intensities table.}
+\item{intensities}{data.frame. Mass Dynamics intensities table.}
 
-\item{featuresMetadataTable}{data.frame Mass Dynamics metadata table.}
+\item{metadata}{data.frame Mass Dynamics metadata table.}
 
-\item{featureColname}{str Name of feature column name in `intensitiesTable` and `featuresMetadataTable`.}
+\item{featureColname}{str Name of feature column name in `intensities` and `metadata`.}
 
-\item{replicateColname}{str Name of replicate column name in `intensitiesTable`.}
+\item{replicateColname}{str Name of replicate column name in `intensities`.}
 
 \item{normMethod}{str Normalisation method to pass to `limma::normalizeBetweenArrays`.}
 }
