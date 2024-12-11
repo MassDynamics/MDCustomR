@@ -1,6 +1,6 @@
-run_transform_intensities <- function(intensity, metadata, normMethod, intensitySource){
+library(MDCustomR)
 
-  library(MDCustomR)
+run_transform_intensities <- function(intensities, metadata, normMethod, intensitySource){
 
   SOURCE_TO_DATA_MAP <- list(
     protein = list(
@@ -17,16 +17,13 @@ run_transform_intensities <- function(intensity, metadata, normMethod, intensity
   print("Package Versions")
   print(packageVersion("MDCustomR"))
 
-  output <- MDCustomR::transformIntensities(intensities = intensity,
+  output <- MDCustomR::transformIntensities(intensities = intensities,
                                  metadata = metadata,
                                  featureColname = "GroupId",
                                  replicateColname = "replicate",
                                  normMethod = normMethod)
 
-  intensity <- output$intensity
-  metadata <- output$metadata
-
-  if (!(intensitySource %in% SOURCE_TO_DATA_MAP)) {
+  if (!(intensitySource %in% names(SOURCE_TO_DATA_MAP))) {
     stop(paste0("Invalid intensity source: ", intensitySource))
   }
 
@@ -34,8 +31,8 @@ run_transform_intensities <- function(intensity, metadata, normMethod, intensity
   intensity_table_name <- data_keys["intensity"]
   metadata_table_name <- data_keys["metadata"]
 
-  return(list(intensity_table_name = intensity,
-              metadata_table_name = metadata,
+  return(list(intensity_table_name = output$intensity,
+              metadata_table_name = output$metadata,
               Runtime_Metadata = output$runtimeMetadata))
 
 }
