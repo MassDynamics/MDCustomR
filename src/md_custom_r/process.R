@@ -30,12 +30,18 @@ run_transform_intensities <- function(intensities, metadata, normMethod, intensi
     stop(paste0("Invalid intensity source: ", intensitySource))
   }
 
-  data_keys <- SOURCE_TO_DATA_MAP[intensitySource]
-  intensity_table_name <- data_keys["intensity"]
-  metadata_table_name <- data_keys["metadata"]
+  data_keys <- SOURCE_TO_DATA_MAP[[intensitySource]]
+  intensity_table_name <- data_keys[["intensity"]]
+  metadata_table_name <- data_keys[["metadata"]]
 
-  return(list(intensity_table_name = output$intensity,
-              metadata_table_name = output$metadata,
-              Runtime_Metadata = output$runtimeMetadata))
+  return_object <- list(intensity_table_name = output$intensity,
+                        metadata_table_name = output$metadata,
+                        Runtime_Metadata = output$runtimeMetadata)
+  names(return_object) <- c(intensity_table_name, metadata_table_name, "Runtime_Metadata")
+
+  print(" names(return_object)")
+  print( names(return_object))
+
+  return(return_object)
 
 }
