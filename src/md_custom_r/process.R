@@ -21,8 +21,8 @@ run_transform_intensities <- function(intensity, metadata, normMethod, intensity
   print(ls("package:MDCustomR"))
 
 
-  output <- MDCustomR::transformIntensities(intensities = protein_intensity,
-                                 metadata = protein_metadata,
+  output <- MDCustomR::transformIntensities(intensities = intensity,
+                                 metadata = metadata,
                                  featureColname = "GroupId",
                                  replicateColname = "replicate",
                                  normMethod = normMethod)
