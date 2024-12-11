@@ -3,7 +3,6 @@ from pydantic import conlist
 from typing import Literal
 
 from md_dataset.process import md_r
-from md_dataset.models.types import BiomolecularSource
 from md_dataset.models.types import DatasetType
 from md_dataset.models.types import InputParams
 from md_dataset.models.types import IntensityInputDataset
@@ -40,11 +39,10 @@ def prepare_input_transform_intensities(
         params: MDCustomRParams,
         output_dataset_type: DatasetType) -> RPreparation:
 
-    intensity_source = BiomolecularSource(params.intensity_source)
-    intensity_table = input_datasets[0].table(intensity_source, IntensityTableType.INTENSITY)
-    metadata_table = input_datasets[0].table(intensity_source, IntensityTableType.METADATA)
+    intensity_table = input_datasets[0].table(IntensityTableType.INTENSITY)
+    metadata_table = input_datasets[0].table(IntensityTableType.METADATA)
 
     return RPreparation(data_frames = [ \
             intensity_table.data, \
             metadata_table.data], \
-            r_args=[params.normalisation_methods, intensity_source.value])
+            r_args=[params.normalisation_methods, 'Protein']) # hardcoded for the moment
