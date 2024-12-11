@@ -23,6 +23,9 @@ run_transform_intensities <- function(intensities, metadata, normMethod, intensi
                                  replicateColname = "replicate",
                                  normMethod = normMethod)
 
+  print("Names source data map")
+  print(names(SOURCE_TO_DATA_MAP))
+
   if (!(intensitySource %in% names(SOURCE_TO_DATA_MAP))) {
     stop(paste0("Invalid intensity source: ", intensitySource))
   }
