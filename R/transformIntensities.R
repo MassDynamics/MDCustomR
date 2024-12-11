@@ -80,11 +80,12 @@ normalizeData <- function(dataWide, normMethod, featureColname) {
 #' @keywords internal
 #' @noRd
 #' @import tidyr
+#' @import tidyselect
 pivotToLong <- function(normalisedData, intensities, replicateColname, featureColname) {
   replicateColumns <- unique(intensities[[replicateColname]])
   dataLong <- normalisedData |>
     pivot_longer(
-      all_of(replicateColumns),
+      tidyselect::all_of(replicateColumns),
       names_to = replicateColname,
       values_to = "NormalisedIntensity"
     )
