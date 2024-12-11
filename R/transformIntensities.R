@@ -73,6 +73,7 @@ normalizeData <- function(dataWide, normMethod, featureColname) {
   normalized <- data.frame(
     limma::normalizeBetweenArrays(log2(dataWide), method = normMethod)
   )
+  colnames(normalized) <- colnames(dataWide)
   normalized[[featureColname]] <- as.numeric(rownames(normalized))
   return(normalized)
 }
@@ -83,9 +84,6 @@ normalizeData <- function(dataWide, normMethod, featureColname) {
 #' @import tidyselect
 pivotToLong <- function(normalisedData, intensities, replicateColname, featureColname) {
   replicateColumns <- unique(intensities[[replicateColname]])
-
-  print("colnames normalisedData")
-  print(colnames(normalisedData))
 
   dataLong <- normalisedData |>
     pivot_longer(
