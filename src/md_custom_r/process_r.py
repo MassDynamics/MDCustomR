@@ -10,15 +10,6 @@ from md_dataset.models.types import IntensityTableType
 from md_dataset.models.types import RPreparation
 
 class MDCustomRParams(InputParams):
-  intensity_source: Literal[
-      "protein",
-      "peptide"
-  ] = Field(
-      title='Intensity Source',
-      description="Source table of intensities",
-      default='none'
-  )
-
   normalisation_methods: Literal[
     "none",
     "scale",
