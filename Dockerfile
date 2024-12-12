@@ -19,4 +19,4 @@ COPY R/ ./R/
 
 RUN Rscript install.R
 
-RUN pip install -e .
+RUN pip install .
