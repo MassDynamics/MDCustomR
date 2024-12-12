@@ -19,4 +19,6 @@ COPY R/ ./R/
 
 RUN Rscript install.R
 
-RUN pip install .
+RUN pip install --no-cache-dir --upgrade pip
+COPY dist/ /tmp/dist/
+RUN pip install --no-cache-dir /tmp/dist/*.whl
