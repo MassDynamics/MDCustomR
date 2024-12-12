@@ -17,13 +17,17 @@ run_transform_intensities <- function(intensities, metadata, normMethod, intensi
   print("Package Versions")
   print(packageVersion("MDCustomR"))
 
-  output <- MDCustomR::transformIntensities(intensities = intensities,
-                                 metadata = metadata,
-                                 featureColname = "GroupId",
-                                 replicateColname = "replicate",
-                                 normMethod = normMethod)
+  print(names(metadata))
 
-  return(output)
+  return_object <- list(metadata = metadata)
+  return(return_object)
+  # output <- MDCustomR::transformIntensities(intensities = intensities,
+  #                                metadata = metadata,
+  #                                featureColname = "GroupId",
+  #                                replicateColname = "replicate",
+  #                                normMethod = normMethod)
+
+
   # print("Names source data map")
   # print(names(SOURCE_TO_DATA_MAP))
   #
