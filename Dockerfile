@@ -15,6 +15,7 @@ FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package:0.3.7-
 
 RUN yum -y update
 
+ENV WORK_DIR="/usr/src/app"
 WORKDIR $WORK_DIR
 
 RUN yum install harfbuzz-devel fribidi-devel libpng-devel
@@ -35,5 +36,5 @@ COPY R/ ./R/
 RUN Rscript install.R
 
 RUN pip install --no-cache-dir --upgrade pip
-COPY --from=build dist/*.whl /tmp/
+COPY --from=build ./dist/*.whl /tmp/
 RUN pip install --no-cache-dir /tmp/dist/*.whl
