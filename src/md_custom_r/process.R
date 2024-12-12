@@ -17,9 +17,14 @@ run_transform_intensities <- function(intensities, metadata, normMethod, intensi
   print("Package Versions")
   print(packageVersion("MDCustomR"))
 
-  print(names(metadata))
+  # print(names(metadata))
 
-  return_object <- list(metadata = metadata)
+  output <- data.frame(
+    Test = c("First"),
+    Message = c("a message")
+  )
+
+  return_object <- list("metadata" = output)
   return(return_object)
   # output <- MDCustomR::transformIntensities(intensities = intensities,
   #                                metadata = metadata,
