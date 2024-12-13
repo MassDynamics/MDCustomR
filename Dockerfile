@@ -37,6 +37,8 @@ COPY R/ ./R/
 RUN Rscript install.R
 
 ARG PACKAGE_VERSION
+ENV PYTHONPATH="/usr/local/lib/python3.11/site-packages:$PYTHONPATH"
+
 RUN pip install --no-cache-dir --upgrade pip
 COPY --from=build /usr/src/app/dist/md_custom_r-${PACKAGE_VERSION}-py3-none-any.whl /tmp/
 RUN pip install --no-cache-dir /tmp/md_custom_r-${PACKAGE_VERSION}-py3-none-any.whl
