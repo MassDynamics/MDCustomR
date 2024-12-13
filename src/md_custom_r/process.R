@@ -20,6 +20,8 @@ run_transform_intensities <- function(intensities, metadata, normMethod, intensi
   print(names(metadata))
 
   return_object <- list(metadata = as.data.frame(metadata))
+  print(names(return_object))
+  print(class(return_object$metadata))
   return(return_object)
   # output <- MDCustomR::transformIntensities(intensities = intensities,
   #                                metadata = metadata,
