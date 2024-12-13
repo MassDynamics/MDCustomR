@@ -36,5 +36,5 @@ COPY R/ ./R/
 RUN Rscript install.R
 
 RUN pip install --no-cache-dir --upgrade pip
-COPY --from=build $WORKDIR/dist/*.whl /tmp/
+COPY --from=build $WORK_DIR/dist/*.whl /tmp/
 RUN pip install --no-cache-dir /tmp/dist/*.whl
