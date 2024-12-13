@@ -3,13 +3,13 @@ FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package:0.3.7-
 
 RUN yum -y update
 
+ARG PACKAGE_VERSION
 ENV WORK_DIR="/usr/src/app"
 WORKDIR $WORK_DIR
 
-COPY . .
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel build
-ENV PACKAGE_VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml'))['project']['version'])")
-RUN docker build --build-arg PACKAGE_VERSION=$PACKAGE_VERSION -t md-custom-r .
+COPY . .
+RUN python -m build && ls -l /usr/src/app/dist/
 
 FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package:0.3.7-83
 # FROM md_dataset_package-linux:latest
@@ -36,7 +36,7 @@ COPY R/ ./R/
 
 RUN Rscript install.R
 
+ARG PACKAGE_VERSION
 RUN pip install --no-cache-dir --upgrade pip
-COPY --from=build /usr/src/app/dist/*.whl /tmp/
-COPY --from=builder /app/dist/md-packag-r-${PACKAGE_VERSION}-py3-none-any.whl /tmp/
-RUN pip install --no-cache-dir /tmp/dist/md-packag-r-${PACKAGE_VERSION}-py3-none-any.whl
+COPY --from=build /usr/src/app/dist/md_custom_r-${PACKAGE_VERSION}-py3-none-any.whl /tmp/
+RUN pip install --no-cache-dir /tmp/md_custom_r-${PACKAGE_VERSION}-py3-none-any.whl
