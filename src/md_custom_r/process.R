@@ -24,5 +24,5 @@ run_transform_intensities <- function(intensities, metadata, normMethod, intensi
                                  featureColname = "GroupId",
                                  replicateColname = "replicate",
                                  normMethod = normMethod)
-  return(output)
+  return(output$intensity)
 }
