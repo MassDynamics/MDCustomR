@@ -41,12 +41,32 @@ transformIntensities <- function(intensities,
                                 normMethod = normMethod)
 
   # Step 7. Return final result
+  metadata <- convertNAToStrings(metadata)
   return(list(
     intensity = dataLong, #name should be fixed
     metadata = metadata, #name should be fixed like this
     runtimeMetadata = runtimeMetadata
   ))
 }
+
+
+
+
+#' Convert columns to characters and NA to strings
+#'
+#' @description This is needed for the parquet conversion
+#' @keywords internal
+convertNAToStrings <- function(outputTable){
+  metadataColumns <- c("GeneNames", "GroupLabel", "GroupLabelType", "ProteinIds", "Description")
+  for(metaCol in metadataColumns){
+    if(metaCol %in% colnames(outputTable)){
+      outputTable[[metaCol]] <- as.character(outputTable[[metaCol]])
+      outputTable[[metaCol]][is.na(outputTable[[metaCol]])] <-  ""
+    }
+  }
+  return(outputTable)
+}
+
 
 
 #' @keywords internal

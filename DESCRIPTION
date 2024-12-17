@@ -1,7 +1,7 @@
 Package: MDCustomR
 Type: Package
 Title: MDCustomR
-Version: 0.1.3
+Version: 0.1.4
 Author: Anna Quaglieri
 Maintainer: The package maintainer <anna@massdynamics.com>
 Description: Example to create custom R script/packages for Mass Dynamics
