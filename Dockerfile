@@ -1,4 +1,5 @@
-FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package_base:0.3.8-105
+ARG DATASET_PACKAGE_VERSION
+FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package_base:$DATASET_PACKAGE_VERSION
 # FROM md_dataset_base-linux:latest
 
 RUN yum -y update
@@ -19,6 +20,5 @@ COPY R/ ./R/
 
 RUN Rscript install.R
 
-RUN pip install git+https://github.com/MassDynamics/md_dataset.git@${PACKAGE_VERSION}
-
+COPY pyproject.toml .
 RUN pip install -e .
