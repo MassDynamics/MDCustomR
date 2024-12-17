@@ -1,5 +1,5 @@
-FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package:0.3.7-99
-# FROM md_dataset_package-linux:latest
+FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package_base:0.3.8-105
+# FROM md_dataset_base-linux:latest
 
 RUN yum -y update
 RUN yum install harfbuzz-devel fribidi-devel libpng-devel
@@ -18,5 +18,7 @@ COPY src/ ./src/
 COPY R/ ./R/
 
 RUN Rscript install.R
+
+RUN pip install git+https://github.com/MassDynamics/md_dataset.git@${PACKAGE_VERSION}
 
 RUN pip install -e .
