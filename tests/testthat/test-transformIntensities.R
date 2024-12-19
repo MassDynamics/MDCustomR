@@ -15,6 +15,11 @@ testthat::test_that("transformIntensities is running", {
 
   expect_true(length(output) == 3)
   expect_true(all(names(output) == c("intensity", "metadata", "runtimeMetadata")))
+  expect_true(all(colnames(output$intensity) == c("GroupId", "Imputed", "NormalisedIntensity", "ReplicateCountTot",
+                                                  "condition", "numberOfReplicateCount", "precentageOfReplicates",
+                                                  "replicate", "replicateNumber")))
+  expect_true(all(colnames(output$metadata) == c("GeneNames", "GroupId", "GroupLabel",
+                                                 "GroupLabelType", "ProteinIds", "Description")))
 
 })
 
@@ -32,6 +37,11 @@ testthat::test_that("transformIntensities is running with special characters", {
 
   expect_true(length(output) == 3)
   expect_true(all(names(output) == c("intensity", "metadata", "runtimeMetadata")))
+  expect_true(all(colnames(output$intensity) == c("GroupId", "Imputed", "NormalisedIntensity", "ReplicateCountTot",
+                                                  "condition", "numberOfReplicateCount", "precentageOfReplicates",
+                                                  "replicate", "replicateNumber")))
+  expect_true(all(colnames(output$metadata) == c("GeneNames", "GroupId", "GroupLabel",
+                                                 "GroupLabelType", "ProteinIds", "Description")))
 
 })
 
@@ -47,6 +57,11 @@ testthat::test_that("transformIntensities is converting NAs to empty strings", {
                                  featureColname = "GroupId",
                                  replicateColname = "replicate",
                                  normMethod = "scale")
+  expect_true(all(colnames(output$intensity) == c("GroupId", "Imputed", "NormalisedIntensity", "ReplicateCountTot",
+                                                  "condition", "numberOfReplicateCount", "precentageOfReplicates",
+                                                  "replicate", "replicateNumber")))
+  expect_true(all(colnames(output$metadata) == c("GeneNames", "GroupId", "GroupLabel",
+                                                 "GroupLabelType", "ProteinIds", "Description")))
 
 })
 

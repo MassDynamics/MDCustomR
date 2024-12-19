@@ -26,13 +26,16 @@ transformIntensities <- function(intensities,
   dataLong <- pivotToLong(normalizedData, intensities, replicateColname, featureColname)
 
   # Step 4: Merge with initial data
+  intensities$NormalisedIntensity <- NULL
   dataMerged <- dataLong |>
     dplyr::left_join(intensities, by = c(featureColname, replicateColname))
 
-  # Step 5: Ensure all column names are preserved
-  if (!(all(colnames(colnamesIntensities) %in% colnames(dataLong)))) {
+  # Step 5: Ensure all column names are preserved & respect the initial order
+  if (!(all(colnamesIntensities %in% colnames(dataMerged)))) {
     stop("Not all intensities column names are in output")
   }
+
+  dataMerged <- dataMerged[, colnamesIntensities]
 
   # Step 6: Create runtime metadata
   runtimeMetadata <- data.frame(RVersion = sessionInfo()[1]$R.version$version.string,
@@ -43,7 +46,7 @@ transformIntensities <- function(intensities,
   # Step 7. Return final result
   metadata <- convertNAToStrings(metadata)
   return(list(
-    intensity = dataLong, #name should be fixed
+    intensity = dataMerged, #name should be fixed
     metadata = metadata, #name should be fixed like this
     runtimeMetadata = runtimeMetadata
   ))
@@ -104,12 +107,6 @@ normalizeData <- function(dataWide, normMethod, featureColname) {
 #' @import tidyselect
 pivotToLong <- function(normalisedData, intensities, replicateColname, featureColname) {
   replicateColumns <- unique(intensities[[replicateColname]])
-
-  print("replicateColumns")
-  print(replicateColumns)
-
-  print("columns of normalisedData")
-  print(colnames(normalisedData))
 
   dataLong <- normalisedData |>
     pivot_longer(
