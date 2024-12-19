@@ -25,9 +25,11 @@ run_transform_intensities <- function(intensities, metadata, normMethod, intensi
                                  replicateColname = "replicate",
                                  normMethod = normMethod)
 
-  return(list(
+  return(
+    list(
       intensity=output$intensity,
-      metadata=output$metadata),
-      runtime_metadata=output$runtimeMetadata)
+      metadata=output$metadata,
+      runtime_metadata=output$runtimeMetadata
+    )
   )
 }
