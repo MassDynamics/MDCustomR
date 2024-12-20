@@ -2,18 +2,6 @@ library(MDCustomR)
 
 run_transform_intensities <- function(intensities, metadata, normMethod, intensitySource){
 
-  SOURCE_TO_DATA_MAP <- list(
-    protein = list(
-      intensity = "Protein_Intensity",
-      metadata = "Protein_Metadata"
-    ),
-    peptide = list(
-      intensity = "Peptide_Intensity",
-      metadata = "Peptide_Metadata"
-    )
-  )
-
-
   print("Package Versions")
   print(packageVersion("MDCustomR"))
 
@@ -27,9 +15,9 @@ run_transform_intensities <- function(intensities, metadata, normMethod, intensi
 
   return(
     list(
-      intensity=output$intensity,
-      metadata=output$metadata,
-      runtime_metadata=output$runtimeMetadata
+      intensity=output$intensity, # required
+      metadata=output$metadata, # required
+      runtime_metadata=output$runtimeMetadata # optional
     )
   )
 }

@@ -22,9 +22,6 @@ with the workflow located at `./R/transformIntensities.R`.
 
 This package depends on the `limma` and `tidyr` R packages.
 
-**XXXThe user will need to provide the R version - we need to decide how
-we are going to handle **
-
 The main R function should accept an intensity table and a metadata
 table as inputs. Additional parameters of your choice can also be
 included. The input and output tables must adhere to the standard Mass

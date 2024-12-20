@@ -7,7 +7,7 @@ from md_dataset.models.types import DatasetType
 from md_dataset.models.types import InputParams
 from md_dataset.models.types import IntensityInputDataset
 from md_dataset.models.types import IntensityTableType
-from md_dataset.models.types import RPreparation
+from md_dataset.models.types import RFuncArgs
 
 class MDCustomRParams(InputParams):
   normalisation_methods: Literal[
@@ -28,12 +28,12 @@ def prepare_input_transform_intensities(
                                 min_items=1,
                                 max_items=1),
         params: MDCustomRParams,
-        output_dataset_type: DatasetType) -> RPreparation:
+        output_dataset_type: DatasetType) -> RFuncArgs:
 
     intensity_table = input_datasets[0].table(IntensityTableType.INTENSITY)
     metadata_table = input_datasets[0].table(IntensityTableType.METADATA)
 
-    return RPreparation(data_frames = [ \
+    return RFuncArgs(data_frames = [ \
             intensity_table.data, \
             metadata_table.data], \
             r_args=[params.normalisation_methods, 'protein']) # hardcoded for the moment
