@@ -8,7 +8,7 @@ environment:
   serviceAccountName:
   sourceBucket:
   resultsBucket:
-  flow: prepare_input_transform_intensities
+  flow: input_transform_intensities
   flowPackage: md_custom_r.process_r
   deploymentName: process-r-deployment
   datasetRunType: INTENSITY

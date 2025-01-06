@@ -17,7 +17,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-  "md_dataset[r] @ git+https://github.com/MassDynamics/md_dataset@v0.3.11-120"
+  "md_dataset[r] @ git+https://github.com/MassDynamics/md_dataset@v0.3.12-122"
 ]
 description = "This project is an example for setting up a new custom R workflow integrated into the Mass Dynamics ecosystem."
 keywords = [""]
@@ -25,4 +25,4 @@ license = {file = "LICENSE"}
 name = "md_custom_r"
 readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.11"
-version = "0.1.1"
+version = "0.1.6"
