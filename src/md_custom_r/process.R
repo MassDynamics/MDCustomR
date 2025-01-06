@@ -1,6 +1,6 @@
 library(MDCustomR)
 
-run_transform_intensities <- function(intensities, metadata, normMethod, intensitySource){
+run_transform_intensities <- function(intensities, metadata, normMethod){
 
   print("Package Versions")
   print(packageVersion("MDCustomR"))

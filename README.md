@@ -27,15 +27,24 @@ table as inputs. Additional parameters of your choice can also be
 included. The input and output tables must adhere to the standard Mass
 Dynamics format for an INTENSITY dataset.
 
-# Step 2: Implement the Runner Function
+# Step 2: Implement the R Runner
 
 Develop a runner function to invoke the main workflow function and
 produce the output as a named list. An example of this function is
 provided in `./process.R`.
 
-The naming conventions for the output, particularly when generating a
-new intensity dataset, should follow the recommendations specified in
-the `SOURCE_TO_DATA_MAP` list.
+This function needs to use the `@md_r` python decorator and provide the
+`r_file` path and `r_function` provided in Step 1.
+
+The naming conventions for the output need to be based on the type of
+dataset produced.
+
+Currently, only Intensty datasets are supported. For example, the intensity
+type needs to return a list including `intensity`, `metadata` and the optional
+`runtime_metadata`.
+
+These types can be found in the [MD Dataset Package](https://github.com/MassDynamics/md_dataset)
+
 
 # Step 3: Create the Python Runner
 
@@ -43,5 +52,17 @@ Write a Python runner, as shown in `./process_r.py`. This script uses
 the Mass Dynamics `md_dataset` Python package to prepare the R input and
 execute the workflow in Prefect.
 
-In this file, define and document the workflow’s input arguments to
-ensure clarity and consistency.
+In this file, we prepare the dataframes and program arguments provided
+to our R Runner function in Step 2.
+
+# Step 4: Create a Docker image
+
+See an example, Dockerfile
+
+The base docker image Dockerfiles can be found in [MD Dataset Package](https://github.com/MassDynamics/md_dataset)
+
+# Step 5: Deploy to the MD platform (Kubernetes)
+
+An example can be found in this project using helm.
+
+See the `./infra` directory and `./scripts/deploy`.
