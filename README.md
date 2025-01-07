@@ -5,7 +5,7 @@ December 2024
 - [Step 1: Develop the R Workflow](#step-1-develop-the-r-workflow)
 - [Step 2: Implement the R Runner](#step-2-implement-the-r-runner)
 - [Step 3: Create the Python Runner](#step-3-create-the-python-runner)
-- [Step 4: Create the Docker Image](#step-4-create-the-docker-image)
+- [Step 4: Create a Docker Image](#step-4-create-a-docker-image)
 - [Step 5: Deploy to the MD platform](#step-5-deploy-to-the-md-platform)
 
 This repository provides instructions and an example for setting up a
