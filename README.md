@@ -31,6 +31,15 @@ Develop an optional runner function to invoke the main workflow function and
 produce the output as a named list. An example of this function is
 provided in `./process.R`.
 
+The naming conventions for the output need to be based on the type of
+dataset produced.
+
+Currently, only Intensty datasets are supported. For example, the intensity
+type needs to return a list including `intensity`, `metadata` and the optional
+`runtime_metadata`.
+
+These types can be found in the [MD Dataset Package](https://github.com/MassDynamics/md_dataset)
+
 # Step 2: Create the Python Runner
 
 Write a Python runner, as shown in `./process_r.py`. This script uses
@@ -42,15 +51,6 @@ to our R Runner function in Step 1.
 
 This function needs to use the `@md_r` python decorator and provide the
 `r_file` path and `r_function` provided in Step 1.
-
-The naming conventions for the output need to be based on the type of
-dataset produced.
-
-Currently, only Intensty datasets are supported. For example, the intensity
-type needs to return a list including `intensity`, `metadata` and the optional
-`runtime_metadata`.
-
-These types can be found in the [MD Dataset Package](https://github.com/MassDynamics/md_dataset)
 
 # Step 3: Create a Docker image
 
