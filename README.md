@@ -29,7 +29,7 @@ Dynamics format for an INTENSITY dataset.
 
 Develop an optional runner function to invoke the main workflow function and
 produce the output as a named list. An example of this function is
-provided in `./process.R`.
+provided in `./src/md_custom_r/process.R`.
 
 The naming conventions for the output need to be based on the type of
 dataset produced.
@@ -42,7 +42,7 @@ These types can be found in the [MD Dataset Package](https://github.com/MassDyna
 
 # Step 2: Create the Python Runner
 
-Write a Python runner, as shown in `./process_r.py`. This script uses
+Write a Python runner, as shown in `./src/md_custom_r/process_r.py`. This script uses
 the Mass Dynamics `md_dataset` Python package to prepare the R input and
 execute the workflow in Prefect.
 
