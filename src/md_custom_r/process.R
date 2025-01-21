@@ -5,8 +5,6 @@ run_transform_intensities <- function(intensities, metadata, normMethod){
   print("Package Versions")
   print(packageVersion("MDCustomR"))
 
-  print(names(metadata))
-
   output <- MDCustomR::transformIntensities(intensities = intensities,
                                  metadata = metadata,
                                  featureColname = "GroupId",
