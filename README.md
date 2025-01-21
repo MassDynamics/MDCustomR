@@ -52,6 +52,10 @@ to our R Runner function in Step 1.
 This function needs to use the `@md_r` python decorator and provide the
 `r_file` path and `r_function` provided in Step 1.
 
+The arguments to the function are also important. The second argument is the
+custom set of params that can be be used by the R function and also render
+the form on the MD platform.
+
 # Step 3: Create a Docker image
 
 See an example, Dockerfile

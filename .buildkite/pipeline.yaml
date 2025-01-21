@@ -18,7 +18,7 @@ steps:
       BUILD_NUMBER: "${BUILDKITE_BUILD_NUMBER}"
       DOCKER_FILE: "Dockerfile"
       REPO_NAME: "md_custom_r"
-      DATASET_PACKAGE_VERSION: "0.3.12-123"
+      DATASET_PACKAGE_VERSION: "0.4.1-131"
     agents:
       ebdeploy: true
     concurrency: 1
