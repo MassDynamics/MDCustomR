@@ -25,8 +25,8 @@ class MDCustomRParams(InputParams):
 @md_r(r_file="./src/md_custom_r/process.R", r_function="run_transform_intensities")
 def input_transform_intensities(
         input_datasets: conlist(IntensityInputDataset,
-                                min_items=1,
-                                max_items=1),
+                                min_length=1,
+                                max_length=1),
         params: MDCustomRParams,
         output_dataset_type: DatasetType) -> RFuncArgs:
 
