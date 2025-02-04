@@ -5,7 +5,8 @@ December 2024
 - [Step 1: Develop the R Workflow](#step-1-develop-the-r-workflow)
 - [Step 2: Create the Python Runner](#step-2-create-the-python-runner)
 - [Step 3: Create a Docker Image](#step-3-create-a-docker-image)
-- [Step 4: Deploy to the MD platform](#step-4-deploy-to-the-md-platform)
+- [Step 4: Deploy to the MD platform](#step-4-create-the-project.toml-file)
+- [Step 5: Deploy to the MD platform](#step-5-deploy-to-the-md-platform)
 
 This repository provides instructions and an example for setting up a
 new custom R workflow integrated into the Mass Dynamics ecosystem.
@@ -62,7 +63,7 @@ See an example, Dockerfile
 
 The base docker image Dockerfiles can be found in [MD Dataset Package](https://github.com/MassDynamics/md_dataset)
 
-# Step 4: Create the `project.toml` file 
+# Step 4: Create the project.toml file 
 
 This file provides details about the package, including its versions, dependencies, and authors. For reference, see the example `project.toml`.
 
