@@ -62,7 +62,13 @@ See an example, Dockerfile
 
 The base docker image Dockerfiles can be found in [MD Dataset Package](https://github.com/MassDynamics/md_dataset)
 
-# Step 4: Deploy to the MD platform
+# Step 4: Create the `project.toml` file 
+
+This file provides details about the package, including its versions, dependencies, and authors. For reference, see the example `project.toml`.
+
+Ensure that the `md_dataset` package version is updated to the latest available version if required unless a specific version is explicitly needed.
+
+# Step 5: Deploy to the MD platform
 
 An example can be found in this project using helm.
 
