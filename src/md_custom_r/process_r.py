@@ -3,11 +3,11 @@ from pydantic import conlist
 from typing import Literal
 
 from md_dataset.process import md_r
-from md_dataset.models.types import DatasetType
-from md_dataset.models.types import InputParams
-from md_dataset.models.types import IntensityInputDataset
-from md_dataset.models.types import IntensityTableType
-from md_dataset.models.types import RFuncArgs
+from md_dataset.models.dataset import DatasetType
+from md_dataset.models.dataset import InputParams
+from md_dataset.models.dataset import IntensityInputDataset
+from md_dataset.models.dataset import IntensityTableType
+from md_dataset.models.r import RFuncArgs
 
 class MDCustomRParams(InputParams):
   normalisation_methods: Literal[
