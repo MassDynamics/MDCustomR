@@ -7,13 +7,17 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 [[ -z "$BUILD_NUMBER" ]] && echo "BUILD_NUMBER must be set" && exit 1
 [[ -z "$DOCKER_FILE" ]] && echo "DOCKER_FILE must be set" && exit 1
 [[ -z "$REPO_NAME" ]] && echo "REPO_NAME must be set" && exit 1
-[[ -z "$DATASET_PACKAGE_VERSION" ]] && echo "DATASET_PACKAGE_VERSION must be set" && exit 1
+[[ -z "$BASE_IMAGE" ]] && echo "BASE_IMAGE must be set" && exit 1
 
 # below variables can be set in buildkite hooks and used in every pipeline
 account_id=$(aws sts get-caller-identity --query Account --output text)
 registry=${registry:-${account_id}.dkr.ecr.ap-southeast-2.amazonaws.com}
 
 version=$(sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml)
+base_image_version=$(sed -n 's/.*md_dataset.*@v\([0-9.]*-[0-9]*\).*/\1/p' pyproject.toml)
+
+deployment_image=${BASE_IMAGE}:${base_image_version}
+
 tag=${version}-${BUILD_NUMBER}
 image_tag=${REPO_NAME}:${tag}
 image_tag_latest=${REPO_NAME}:latest
@@ -21,7 +25,7 @@ image_tag_latest=${REPO_NAME}:latest
 echo "BUILD IMAGE"
 docker build \
   --file=$DOCKER_FILE \
-  --build-arg DATASET_PACKAGE_VERSION=${DATASET_PACKAGE_VERSION} \
+  --build-arg BASE_IMAGE=${deployment_image} \
   -t ${image_tag} -t ${image_tag_latest} .
 
 echo "TAG IMAGE"

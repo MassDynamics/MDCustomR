@@ -1,5 +1,5 @@
-ARG DATASET_PACKAGE_VERSION
-FROM 243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package_r_base:$DATASET_PACKAGE_VERSION
+ARG BASE_IMAGE
+FROM $BASE_IMAGE
 
 RUN yum -y update
 RUN yum install harfbuzz-devel fribidi-devel libpng-devel
