@@ -14,4 +14,4 @@ aws eks update-kubeconfig --region ap-southeast-2 --name md-eks-cluster
 helm upgrade --install $release_name $chart_dir --namespace $namespace \
   -f ./infra/helm/md-custom-r/values.yaml \
   -f ./infra/helm/md-custom-r/environments/${ENVIRONMENT}-values.yaml \
-  --set image=$image
+  --set image=$image --wait --timeout 300s
