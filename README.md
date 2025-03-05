@@ -71,7 +71,11 @@ Ensure that the `md_dataset` package version is updated to the latest available 
 
 # Step 5: Deploy to the MD platform
 
-An example can be found in this project using Helm.
+Register the new 'workflow' with the Mass Dynamics platform. This is essentially done
+via the script `md-dataset-deploy` which comes from the [MD Dataset Package](https://github.com/MassDynamics/md_dataset).
+
+An example of running this script can be found in this project using Helm along with all the environment
+variables required. This can be useful if you want to automate this deployment, for example using CI/CD.
 
 To use Helm, Helm needs to be installed on a VM that has access to the
 Kubernetes cluster which has appropriate authorisation along with the code to be installed.
