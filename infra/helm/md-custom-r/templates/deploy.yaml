@@ -47,8 +47,6 @@ spec:
               value: "{{ .Values.environment.awsRegion }}"
             - name: K8_SERVICE_ACCOUNT_NAME
               value: "{{ .Values.environment.serviceAccountName }}"
-            - name: INITIAL_DATA_BUCKET_NAME
-              value: "{{ .Values.environment.sourceBucket }}"
             - name: PREFECT_API_URL
               value: "{{ .Values.prefect.apiUrl }}"
             - name: PREFECT_RESULTS_BUCKET
