@@ -63,6 +63,13 @@ See an example, Dockerfile
 
 The base docker image Dockerfiles can be found in [MD Dataset Package](https://github.com/MassDynamics/md_dataset)
 
+When using local docker images built using the [MD Dataset Package](https://github.com/MassDynamics/md_dataset) in `scripts/local-docker-images`
+you can use the following to build the provided example:
+
+```sh
+docker build --build-arg BASE_IMAGE=md_dataset_package-linux-r-base:latest -t md_custom-r-linux:latest -f Dockerfile --platform="linux/amd64" .
+```
+
 # Step 4: Create the project.toml file
 
 This file provides details about the package, including its versions, dependencies, and authors. For reference, see the example `project.toml`.

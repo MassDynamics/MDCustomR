@@ -1,5 +1,6 @@
-ARG BASE_IMAGE
-FROM $BASE_IMAGE
+ARG BASE_TAG=latest
+ARG BASE_IMAGE=243488295326.dkr.ecr.ap-southeast-2.amazonaws.com/md_dataset_package_r_base:${BASE_TAG}
+FROM ${BASE_IMAGE}
 
 RUN yum -y update
 RUN yum install harfbuzz-devel fribidi-devel libpng-devel
