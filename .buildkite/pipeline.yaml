@@ -38,6 +38,8 @@ steps:
       manual:
         permit_on_passed: true
     agents:
-      terraform: true
+      k8terraform: true
+      queue: kubernetes
+      env: development
     concurrency: 1
     concurrency_group: 'development/converter/deploy'
