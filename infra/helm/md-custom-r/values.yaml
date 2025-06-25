@@ -3,14 +3,21 @@
 image:
 environment:
   name:
-  jobName: md dataset custom r
   awsRegion:
   serviceAccountName:
   sourceBucket:
   resultsBucket:
+customR:
+  jobName: md dataset custom r
   flow: input_transform_intensities
   flowPackage: md_custom_r.process_r
   deploymentName: process-r-deployment
+  datasetRunType: INTENSITY
+customHelloWorldR:
+  jobName: md hello world
+  flow: hello_world
+  flowPackage: md_custom_r.process_r
+  deploymentName: process-hello-world-r-deployment
   datasetRunType: INTENSITY
 prefect:
   apiUrl: http://prefect-server:4200/api
