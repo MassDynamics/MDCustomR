@@ -14,7 +14,7 @@ account_id=$(aws sts get-caller-identity --query Account --output text)
 registry=${registry:-${account_id}.dkr.ecr.ap-southeast-2.amazonaws.com}
 
 version=$(sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml)
-base_image_version=$(sed -n 's/.*md_dataset.*@v\([0-9.]*-[0-9]*\).*/\1/p' pyproject.toml)
+base_image_version=$(sed -n 's/.*md_dataset.*@v\([^"]*\).*/\1/p' pyproject.toml)
 
 deployment_image=${BASE_IMAGE}:${base_image_version}
 
