@@ -17,7 +17,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-  "md_dataset[r] @ git+https://github.com/MassDynamics/md_dataset@v0.5.11-165"
+  "md_dataset[r] @ git+https://github.com/MassDynamics/md_dataset@v0.5.17-199"
 ]
 description = "This project is an example for setting up a new custom R workflow integrated into the Mass Dynamics ecosystem."
 keywords = [""]

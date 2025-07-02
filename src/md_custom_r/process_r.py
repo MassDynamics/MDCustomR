@@ -38,19 +38,3 @@ def input_transform_intensities(
             intensity_table.data, \
             metadata_table.data], \
             r_args=[params.normalisation_methods])
-
-@md_r(r_file="./src/md_custom_r/hello.R", r_function="hello_world")
-def hello_world(
-        input_datasets: conlist(
-            IntensityInputDataset,
-            min_length=1,
-            max_length=1),
-        output_dataset_type: DatasetType) -> RFuncArgs:
-
-    intensity_table = input_datasets[0].table(IntensityTableType.INTENSITY)
-    metadata_table = input_datasets[0].table(IntensityTableType.METADATA)
-
-    return RFuncArgs(data_frames = [ \
-            intensity_table.data, \
-            metadata_table.data]
-            )
