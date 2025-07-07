@@ -45,6 +45,7 @@ def hello_world(
             IntensityInputDataset,
             min_length=1,
             max_length=1),
+        input_params: InputParams,
         output_dataset_type: DatasetType) -> RFuncArgs:
 
     intensity_table = input_datasets[0].table(IntensityTableType.INTENSITY)
