@@ -63,3 +63,46 @@ spec:
               value: "{{ .Values.customR.deploymentName }}"
             - name: DATASET_RUN_TYPE
               value: "{{ .Values.customR.datasetRunType }}"
+        - name: md-custom-hello-world-r-deploy
+          image: "{{ .Values.image }}"
+          command: ["md-dataset-deploy"]
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "1000m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          env:
+            - name: STAGE
+              value: "{{ .Values.environment.name }}"
+            - name: DOCKER_IMAGE
+              value: "{{ .Values.image }}"
+            - name: PREFECT_DEPLOYMENT_MEMORY_REQUESTS
+              value: "8Gi"
+            - name: PREFECT_DEPLOYMENT_CPU_REQUESTS
+              value: "4000m"
+            - name: PREFECT_DEPLOYMENT_MEMORY_LIMITS
+              value: "8Gi"
+            - name: PREFECT_DEPLOYMENT_CPU_LIMITS
+              value: "4000m"
+            - name: AWS_REGION
+              value: "{{ .Values.environment.awsRegion }}"
+            - name: K8_SERVICE_ACCOUNT_NAME
+              value: "{{ .Values.environment.serviceAccountName }}"
+            - name: PREFECT_API_URL
+              value: "{{ .Values.prefect.apiUrl }}"
+            - name: PREFECT_RESULTS_BUCKET
+              value: "{{ .Values.environment.resultsBucket }}"
+            - name: HONEYBADGER_KEY
+              value: "n/a"
+            - name: JOB_NAME
+              value: "{{ .Values.customHelloWorldR.jobName }}"
+            - name: FLOW
+              value: "{{ .Values.customHelloWorldR.flow }}"
+            - name: FLOW_PACKAGE
+              value: "{{ .Values.customHelloWorldR.flowPackage }}"
+            - name: DEPLOYMENT_NAME
+              value: "{{ .Values.customHelloWorldR.deploymentName }}"
+            - name: DATASET_RUN_TYPE
+              value: "{{ .Values.customHelloWorldR.datasetRunType }}"
