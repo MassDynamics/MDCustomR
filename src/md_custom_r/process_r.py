@@ -53,5 +53,4 @@ def hello_world(
 
     return RFuncArgs(data_frames = [ \
             intensity_table.data, \
-            metadata_table.data],
-            r_args=[])
+            metadata_table.data])
