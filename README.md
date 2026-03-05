@@ -3,10 +3,12 @@ README
 December 2024
 
 - [Step 1: Develop the R Workflow](#step-1-develop-the-r-workflow)
-- [Step 2: Create the Python Runner](#step-2-create-the-python-runner)
-- [Step 3: Create a Docker Image](#step-3-create-a-docker-image)
-- [Step 4: Create the project.toml file](#step-4-create-the-project.toml-file)
-- [Step 5: Deploy to the MD platform](#step-5-deploy-to-the-md-platform)
+- [Step 2: Define Dependencies](#step-2-define-dependencies)
+- [Step 3: Create the Python Runner](#step-3-create-the-python-runner)
+- [Step 4: Local Validation and Testing](#step-4-local-validation-and-testing)
+- [Step 5: Create the pyproject.toml file](#step-5-create-the-pyprojecttoml-file)
+- [Step 6: Create a Docker Image](#step-6-create-a-docker-image)
+- [Step 7: Deploy to the MD platform](#step-7-deploy-to-the-md-platform)
 
 This repository provides instructions and an example for setting up a
 new custom R workflow integrated into the Mass Dynamics ecosystem.
@@ -18,50 +20,97 @@ intensity dataset.
 # Step 1: Develop the R Workflow
 
 Create an R workflow, which can either be a package or a simple
-function. The example in this repository is implemented as an R package,
-with the workflow located at `./R/transformIntensities.R`.
+function. You need a main workflow function and an R runner function
+(e.g. `process.R`) — for packages this loads the package and calls the main function; for scripts the runner can live in the same file. If using an R package, include a `DESCRIPTION` with version constraints for dependencies.
 
-This package depends on the `limma` and `tidyr` R packages.
+The example in this repository is implemented as an R package,
+with the workflow located at `./R/transformIntensities.R`. This package depends on the `limma` and `tidyr` R packages.
+
+**When to use an R package vs an R script**
+
+Use an R package when your workflow has many functions, you want versioning and explicit dependency management, need dev tools (testing, CI/CD), or plan to release it for others to install from GitHub.
+
+Use an R script when the workflow is simple (few functions, one main runner), you're iterating quickly, or you don't need package tooling.
 
 The main R function should accept an intensity table and a metadata
 table as inputs. Additional parameters of your choice can also be
 included. The input and output tables must adhere to the standard Mass
-Dynamics format for an INTENSITY dataset.
+Dynamics format for your chosen dataset type.
 
 Develop an optional runner function to invoke the main workflow function and
 produce the output as a named list. An example of this function is
 provided in `./src/md_custom_r/process.R`.
 
-The naming conventions for the output need to be based on the type of
-dataset produced.
+**Output dataset types**
 
-Currently, only Intensty datasets are supported. For example, the intensity
-type needs to return a list including `intensity`, `metadata` and the optional
-`runtime_metadata`.
+Your workflow can produce any of these dataset types. The R output list structure must match the type.
 
-These types can be found in the [MD Dataset Package](https://github.com/MassDynamics/md_dataset)
+- **INTENSITY** — Required: `intensity`, `metadata`. Optional: `runtime_metadata`, `ptm_sites`
+- **PAIRWISE** — Required: `results`. Optional: `runtime_metadata`
+- **ANOVA** — Required: `results`. Optional: `runtime_metadata`
+- **ENRICHMENT** — Required: `results`. Optional: `runtime_metadata`, `database_metadata`
+- **DOSE_RESPONSE** — Required: `output_curves`, `output_volcanoes`, `input_drc`. Optional: `runtime_metadata`
 
-# Step 2: Create the Python Runner
+See [md_dataset models](https://github.com/MassDynamics/md_dataset/blob/main/src/md_dataset/models/dataset.py) for full details.
 
-Write a Python runner, as shown in `./src/md_custom_r/process_r.py`. This script uses
+# Step 2: Define Dependencies
+
+Create `dependencies.R` to list all R packages — this file is required and runs during the Docker build. All required R packages and system dependencies must be declared so the image can install them.
+
+**R packages**
+
+- `dependencies.R` — installs R packages *before* the R package or script. Use for base CRAN/Bioconductor packages (e.g. `BiocManager::install("limma")`) and packages not listed in `DESCRIPTION` (if using an R package)
+- **R package only:** define version constraints in `DESCRIPTION` (e.g. `limma (>= 3.42.2)`)
+- **R package only:** create `install.R` (e.g. `devtools::install()`) to install your package
+
+**System dependencies**
+
+- `dependencies.sh` — optional; installs system libraries (e.g. harfbuzz, libxml2). Often discovered when the Docker build fails during R package install. See [MDFlexiComparisons](https://github.com/MassDynamics/MDFlexiComparisons) for an example
+
+# Step 3: Create the Python Runner
+
+Create a Python runner (`process_r.py`), as shown in `./src/md_custom_r/process_r.py`. This file defines the form that surfaces parameters to users in the MD platform. This script uses
 the Mass Dynamics `md_dataset` Python package to prepare the R input and
 execute the workflow in Prefect.
 
-In this file, we prepare the dataframes and program arguments provided
-to our R Runner function in Step 1.
+The Python runner performs three things:
+1. **Define parameters** — which arguments to expose to the user
+2. **Configure the form** — how they appear in the UI (follow [md_form guidelines](https://github.com/MassDynamics/md_form))
+3. **Pass parameters** — map form values to the R runner via `RFuncArgs`
 
-This function needs to use the `@md_r` python decorator and provide the
-`r_file` path and `r_function` provided in Step 1.
+Any parameter the user must specify must be defined in the form. Use the `@md_r` decorator with the `r_file` path and `r_function` from Step 1. In this file you prepare the dataframes and program arguments passed to the R runner.
 
-The arguments to the function are also important. The second argument is the
-custom set of params that can be be used by the R function and also render
-the form on the MD platform.
+# Step 4: Local Validation and Testing
 
-# Step 3: Create a Docker image
+Before deploying, validate the workflow:
 
-See an example, Dockerfile
+1. **Test the R workflow** — run the main function with representative data
+2. **Test via Python runner** — invoke the Python entrypoint (e.g. from a Jupyter notebook) to exercise the full flow
+3. **Test via Docker** — build and run the Docker image to mimic the deployment environment
 
-The base docker image Dockerfiles can be found in [MD Dataset Package](https://github.com/MassDynamics/md_dataset)
+A Jupyter notebook or script that invokes the Python runner with sample data helps validate end-to-end behaviour before submission.
+
+# Step 5: Create the pyproject.toml file
+
+Create `pyproject.toml` — this file is required. It provides details about the package, including its versions, dependencies, and authors. For reference, see the example `pyproject.toml` in this repository.
+
+**Why is there a Python package with the R code?** The Mass Dynamics platform runs Python. The Python package wraps the R workflow via `md_dataset` and the `@md_r` decorator — it is required for integration.
+
+In `pyproject.toml`, specify:
+- This package's version
+- The latest `md_dataset` version (unless a specific version is explicitly needed)
+
+# Step 6: Create a Docker image
+
+Create a `Dockerfile` — this file is required for deployment. See the example `Dockerfile` in this repository.
+
+**Dockerfile structure: R package vs R script**
+
+For an R package: `COPY` `DESCRIPTION`, `install.R`, `NAMESPACE`, `src/`, `R/`, then run `install.R`.
+
+For an R script: `COPY` the R script(s) only; no `install.R` step. Use `dependencies.R` to install packages.
+
+The base docker image Dockerfiles can be found in [MD Dataset Package](https://github.com/MassDynamics/md_dataset).
 
 When using local docker images built using the [MD Dataset Package](https://github.com/MassDynamics/md_dataset) in `scripts/local-docker-images`
 you can use the following to build the provided example:
@@ -70,13 +119,7 @@ you can use the following to build the provided example:
 docker build --build-arg BASE_IMAGE=md_dataset_package-linux-r-base:latest -t md_custom-r-linux:latest -f Dockerfile --platform="linux/amd64" .
 ```
 
-# Step 4: Create the project.toml file
-
-This file provides details about the package, including its versions, dependencies, and authors. For reference, see the example `project.toml`.
-
-Ensure that the `md_dataset` package version is updated to the latest available version if required unless a specific version is explicitly needed.
-
-# Step 5: Deploy to the MD platform
+# Step 7: Deploy to the MD platform
 
 Register the new 'workflow' with the Mass Dynamics platform. This is essentially done
 via the script `md-dataset-deploy` which comes from the [MD Dataset Package](https://github.com/MassDynamics/md_dataset).
