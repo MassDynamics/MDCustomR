@@ -89,7 +89,7 @@ Before deploying, validate the workflow:
 2. **Test via Python runner** — invoke the Python entrypoint (e.g. from a Jupyter notebook) to exercise the full flow
 3. **Test via Docker** — build and run the Docker image to mimic the deployment environment
 
-A Jupyter notebook or script that invokes the Python runner with sample data helps validate end-to-end behaviour before submission.
+A Jupyter notebook or script that invokes the Python runner with sample data helps validate end-to-end behaviour before submission. See [tutorial/test-process-r.ipynb](tutorial/test-process-r.ipynb) for an example using in-memory data (no AWS or MD platform required).
 
 # Step 5: Create the pyproject.toml file
 
