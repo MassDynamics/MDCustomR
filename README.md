@@ -55,7 +55,7 @@ See [md_dataset models](https://github.com/MassDynamics/md_dataset/blob/main/src
 
 # Step 2: Define Dependencies
 
-Create `dependencies.R` to list all R packages — this file is required and runs during the Docker build. All required R packages and system dependencies must be declared so the image can install them.
+Create `dependencies.R` to list all R packages — this file is required and runs during the Docker build. For step-by-step instructions on creating `DESCRIPTION` and `dependencies.R` (whether you're starting from scratch or have an existing package), see the [tutorial](tutorial/setup-r-package.Rmd). 
 
 **R packages**
 
@@ -65,7 +65,8 @@ Create `dependencies.R` to list all R packages — this file is required and run
 
 **System dependencies**
 
-- `dependencies.sh` — optional; installs system libraries (e.g. harfbuzz, libxml2). Often discovered when the Docker build fails during R package install. See [MDFlexiComparisons](https://github.com/MassDynamics/MDFlexiComparisons) for an example
+- `dependencies.sh` — optional; installs system libraries (e.g. harfbuzz, libxml2). Often discovered when the Docker build fails during R package install. 
+
 
 # Step 3: Create the Python Runner
 

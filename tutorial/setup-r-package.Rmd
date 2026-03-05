@@ -1,0 +1,214 @@
+---
+title: "Setting Up DESCRIPTION and dependencies.R"
+subtitle: "Instructions for Mass Dynamics Custom R Workflows"
+author: "Mass Dynamics"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE)
+```
+
+# Overview
+
+This tutorial explains how to create and maintain `DESCRIPTION` and `dependencies.R` for your Mass Dynamics custom R workflow. The approach depends on whether you are building an **R package** or using a standalone **R script**.
+
+------------------------------------------------------------------------
+
+# Case 1: No DESCRIPTION — Creating an R Package from Scratch
+
+If you do not yet have an R package, start by creating one.
+
+## Step 1: Create the package structure
+
+**Option A — Using `usethis` (recommended):**
+
+```{r}
+# Install usethis if needed
+install.packages("usethis")
+
+# Create a new package (run from the directory where you want the package folder)
+usethis::create_package("MyWorkflow")
+```
+
+This creates a folder with `DESCRIPTION`, `NAMESPACE`, `R/`, and basic structure.
+
+**Option B — Using RStudio:**
+
+Use **File → New Project → New Directory → R Package**, then enter the package name.
+
+**Option C — Manual:**
+
+Create a folder and add a minimal `DESCRIPTION` file:
+
+```         
+Package: MyWorkflow
+Title: My Custom Workflow
+Version: 0.1.0
+Author: Your Name
+Maintainer: Your Name <you@example.com>
+Description: Custom R workflow for Mass Dynamics.
+License: MIT + file LICENSE
+Imports:
+    R (>= 4.0)
+```
+
+## Step 2: Add your R code
+
+Place your workflow functions in `R/` (e.g. `R/my_workflow.R`). Use `@importFrom` in roxygen2 comments to declare dependencies:
+
+```{r}
+#' Run my workflow
+#'
+#' @param data Input dataframe
+#' @importFrom dplyr filter
+#' @importFrom limma normalizeBetweenArrays
+#' @export
+my_workflow <- function(data) {
+  # ...
+}
+```
+
+## Step 3: Update DESCRIPTION from your code
+
+Use `attachment` to keep `DESCRIPTION` in sync with what you use:
+
+```{r}
+install.packages("attachment")
+attachment::att_amend_desc()
+```
+
+This scans `R/`, `tests/`, and vignettes and adds any used packages to `Imports` or `Suggests`.
+
+## Step 4: Create dependencies.R
+
+`dependencies.R` installs packages *before* your package is built during the Docker image build.
+
+**CRAN packages:**
+
+```{r}
+install.packages("dplyr", repos = "https://cloud.r-project.org")
+install.packages("tidyr", repos = "https://cloud.r-project.org")
+```
+
+**Bioconductor packages (e.g. limma):**
+
+```{r}
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager", repos = "https://cloud.r-project.org")
+
+BiocManager::install("limma")
+```
+
+**Build tools (if needed for install.R):**
+
+```{r}
+install.packages("devtools", repos = "https://cloud.r-project.org")
+```
+
+Place `dependencies.R` in the **root** of your repository (same level as `DESCRIPTION`).
+
+------------------------------------------------------------------------
+
+# Case 2: DESCRIPTION Already Exists — You Have an R Package
+
+If you already have an R package with a `DESCRIPTION` file, use it as the source of truth and keep it in sync with your code.
+
+## Step 1: Sync DESCRIPTION from your code
+
+Run this regularly (e.g. after adding new `library()` calls or `@importFrom`):
+
+```{r}
+library(attachment)
+att_amend_desc()
+```
+
+This updates `Imports` and `Suggests` from:
+
+-   `R/` scripts
+-   `tests/` scripts
+-   `@importFrom` / `@import` in roxygen2
+-   `pkg::fun()` calls
+
+Use `extra.suggests = c("pkgdown", "testthat")` if you use dev tools. Save the config for next time:
+
+```{r}
+att_amend_desc(extra.suggests = c("pkgdown", "testthat"), update.config = TRUE)
+```
+
+## Step 2: Create or update dependencies.R
+
+**When DESCRIPTION exists**, `dependencies.R` should install:
+
+1.  **Build tools** — `devtools` (for `install.R`), optionally `BiocManager`
+2.  **Bioconductor packages** — anything from Bioconductor (e.g. `limma`, `DESeq2`) via `BiocManager::install()`
+3.  **Other pre-install needs** — packages that must be present before `devtools::install()` runs
+
+CRAN packages in `DESCRIPTION` are typically installed when `devtools::install()` runs, but Bioconductor packages often need to be installed first.
+
+**Example dependencies.R for an R package:**
+
+```{r}
+# Build tools
+install.packages("devtools", repos = "https://cloud.r-project.org")
+
+# Bioconductor packages (check DESCRIPTION Imports for these)
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager", repos = "https://cloud.r-project.org")
+
+BiocManager::install("limma")   # Add any Bioconductor packages from your DESCRIPTION
+```
+
+**Optional: generate a draft from DESCRIPTION**
+
+```{r}
+library(attachment)
+create_dependencies_file(path = "DESCRIPTION", to = "dependencies.R", open_file = FALSE)
+# Review and edit the output — Bioconductor packages may need manual BiocManager::install() calls
+```
+
+------------------------------------------------------------------------
+
+# Case 3: R Script Only — No Package, No DESCRIPTION
+
+If you use a standalone R script (no package structure), you do not need `DESCRIPTION` or `install.R`.
+
+## Create dependencies.R
+
+`dependencies.R` is your only dependency list. Install every package your script uses:
+
+```{r}
+# CRAN packages
+install.packages(c("dplyr", "tidyr", "readr"), repos = "https://cloud.r-project.org")
+
+# Bioconductor packages
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager", repos = "https://cloud.r-project.org")
+
+BiocManager::install("limma")
+```
+
+Place `dependencies.R` in the root of your repository. The Dockerfile will run it before copying and running your R script.
+
+------------------------------------------------------------------------
+
+# Quick Reference
+
+| Scenario               | DESCRIPTION                                         | dependencies.R                          | install.R             |
+|------------------------|-----------------------------------------------------|-----------------------------------------|-----------------------|
+| **New R package**      | Create with `usethis::create_package()` or manually | Create with CRAN + BiocManager installs | `devtools::install()` |
+| **Existing R package** | Keep in sync with `att_amend_desc()`                | Install build tools + Bioconductor      | `devtools::install()` |
+| **R script only**      | Not needed                                          | Install all packages used               | Not needed            |
+
+------------------------------------------------------------------------
+
+# Tips
+
+-   **Version constraints** — Add them in `DESCRIPTION` (e.g. `limma (>= 3.42.2)`). `dependencies.R` usually installs latest unless you pin versions explicitly.
+-   **System dependencies** — If the Docker build fails with missing libraries (e.g. libxml2), add `dependencies.sh` to install them. See the [README](../../README.md) for details.
+-   **Tracking over time** — For large packages, run `att_amend_desc()` before releases to ensure `DESCRIPTION` matches the codebase.
