@@ -22,7 +22,7 @@ class MDCustomRParams(InputParams):
   )
 
 
-# @md_r(r_file="./src/md_custom_r/process.R", r_function="run_transform_intensities")
+@md_r(r_file="./src/md_custom_r/process.R", r_function="run_transform_intensities")
 def input_transform_intensities(
         input_datasets: conlist(
             IntensityInputDataset,
@@ -39,7 +39,7 @@ def input_transform_intensities(
             metadata_table.data], \
             r_args=[params.normalisation_methods])
 
-# @md_r(r_file="./src/md_custom_r/hello.R", r_function="hello_world")
+@md_r(r_file="./src/md_custom_r/hello.R", r_function="hello_world")
 def hello_world(
         input_datasets: conlist(
             IntensityInputDataset,
