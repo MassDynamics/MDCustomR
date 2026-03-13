@@ -124,7 +124,9 @@ docker build --build-arg BASE_IMAGE=md_dataset_package-linux-r-base:latest -t md
 
 # Step 7: Deploy to the MD platform
 
-Register the new 'workflow' with the Mass Dynamics platform. This is essentially done
+At this stage, you would need to contact MD Member Success, who will coordinate with the engineering team to have your workflow installed on the platform.
+
+A new 'workflow' will be registered with the Mass Dynamics platform. This is essentially done
 via the script `md-dataset-deploy` which comes from the [MD Dataset Package](https://github.com/MassDynamics/md_dataset).
 
 An example of running this script can be found in this project using Helm along with all the environment
@@ -136,3 +138,5 @@ Kubernetes cluster which has appropriate authorisation along with the code to be
 See the `./infra` directory and `./scripts/deploy` for an example of how this could work.
 
 Note: the above example does not provide IAM or Kubernetes Service Account setup.
+
+
