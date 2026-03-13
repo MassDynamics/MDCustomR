@@ -1,5 +1,5 @@
-README
-================
+# README
+
 December 2024
 
 - [Step 1: Develop the R Workflow](#step-1-develop-the-r-workflow)
@@ -8,7 +8,7 @@ December 2024
 - [Step 4: Local Validation and Testing](#step-4-local-validation-and-testing)
 - [Step 5: Create the pyproject.toml file](#step-5-create-the-pyprojecttoml-file)
 - [Step 6: Create a Docker Image](#step-6-create-a-docker-image)
-- [Step 7: Deploy to the MD platform](#step-7-deploy-to-the-md-platform)
+- [Installation on the platform (handled by Mass Dynamics)](#installation-on-the-platform-handled-by-mass-dynamics)
 
 This repository provides instructions and an example for setting up a
 new custom R workflow integrated into the Mass Dynamics ecosystem.
@@ -65,8 +65,7 @@ Create `dependencies.R` to list all R packages — this file is required and run
 
 **System dependencies**
 
-- `dependencies.sh` — optional; installs system libraries (e.g. harfbuzz, libxml2). Often discovered when the Docker build fails during R package install. 
-
+- `dependencies.sh` — optional; installs system libraries (e.g. harfbuzz, libxml2). Often discovered when the Docker build fails during R package install.
 
 # Step 3: Create the Python Runner
 
@@ -75,6 +74,7 @@ the Mass Dynamics `md_dataset` Python package to prepare the R input and
 execute the workflow in Prefect.
 
 The Python runner performs three things:
+
 1. **Define parameters** — which arguments to expose to the user
 2. **Configure the form** — how they appear in the UI (follow [md_form guidelines](https://github.com/MassDynamics/md_form))
 3. **Pass parameters** — map form values to the R runner via `RFuncArgs`
@@ -100,6 +100,7 @@ Create `pyproject.toml` — this file is required. It provides details about the
 **Why is there a Python package with the R code?** The Mass Dynamics platform runs Python. The Python package wraps the R workflow via `md_dataset` and the `@md_r` decorator — it is required for integration.
 
 In `pyproject.toml`, specify:
+
 - This package's version
 - The latest `md_dataset` version (unless a specific version is explicitly needed)
 
@@ -122,21 +123,10 @@ you can use the following to build the provided example:
 docker build --build-arg BASE_IMAGE=md_dataset_package-linux-r-base:latest -t md_custom-r-linux:latest -f Dockerfile --platform="linux/amd64" .
 ```
 
-# Step 7: Deploy to the MD platform
+# Installation on the platform (handled by Mass Dynamics)
 
 At this stage, you would need to contact MD Member Success, who will coordinate with the engineering team to have your workflow installed on the platform.
 
-A new 'workflow' will be registered with the Mass Dynamics platform. This is essentially done
-via the script `md-dataset-deploy` which comes from the [MD Dataset Package](https://github.com/MassDynamics/md_dataset).
+Under the hood, a new workflow is registered via the script `md-dataset-deploy` from the [MD Dataset Package](https://github.com/MassDynamics/md_dataset). For reference, this project includes `./infra` and `./scripts/deploy` with example Helm configurations - these may be useful if you need to automate deployment (e.g. via CI/CD), but installation is typically done by the Mass Dynamics team.
 
-An example of running this script can be found in this project using Helm along with all the environment
-variables required. This can be useful if you want to automate this deployment, for example using CI/CD.
-
-To use Helm, Helm needs to be installed on a VM that has access to the
-Kubernetes cluster which has appropriate authorisation along with the code to be installed.
-
-See the `./infra` directory and `./scripts/deploy` for an example of how this could work.
-
-Note: the above example does not provide IAM or Kubernetes Service Account setup.
-
-
+Note: the example deployment scripts do not cover IAM or Kubernetes Service Account setup.
