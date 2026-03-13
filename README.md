@@ -91,6 +91,8 @@ Before deploying, validate the workflow:
 
 A Jupyter notebook or script that invokes the Python runner with sample data helps validate end-to-end behaviour before submission. See [tutorial/test-process-r.ipynb](tutorial/test-process-r.ipynb) for an example using in-memory data (no AWS or MD platform required).
 
+**NOTE:** When DataFrames are passed through rpy2, small representation differences (often around the 10th decimal) can occur. These are far smaller than any biological difference, but they could affect downstream analysis at times. When writing tests, use tolerance‑based comparisons (`np.allclose`, `pandas.testing.assert_frame_equal` with `check_exact=False`, `rtol`/`atol`) instead of exact equality (`==`). 
+
 # Step 5: Create the pyproject.toml file
 
 Create `pyproject.toml` — this file is required. It provides details about the package, including its versions, dependencies, and authors. For reference, see the example `pyproject.toml` in this repository.
