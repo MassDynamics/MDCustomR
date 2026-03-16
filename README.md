@@ -17,12 +17,18 @@ intensity dataset.
 
 # Step 1: Develop the R Workflow
 
-Create an R workflow, which can either be a package or a simple
-function. You need a main workflow function and an R runner function
-(e.g. `process.R`) — for packages this loads the package and calls the main function; for scripts the runner can live in the same file. If using an R package, include a `DESCRIPTION` with version constraints for dependencies.
+Create an R workflow as either a package or a standalone function. Include:
+- a main function that executes the workflow.
+- an optional runner script in a separate file (e.g.`process.R`) - required for R packages.
 
-The example in this repository is implemented as an R package,
-with the workflow located at `./R/transformIntensities.R`. This package depends on the `limma` and `tidyr` R packages.
+Structure it as follows:
+- If using an R package: the runner script loads the package and calls the main workflow function. See an example runner here:
+https://github.com/MassDynamics/MDCustomR/blob/updates-wip/src/md_custom_r/process.R
+- If using a script: the runner can be the same as the main workflow function, so no separate file is required.
+
+If building an R package, include a `DESCRIPTION` with version constraints for dependencies.
+
+The example in this repository is implemented as an R package, with the workflow located at `./R/transformIntensities.R`. This package depends on the `limma` and `tidyr` R packages.
 
 **When to use an R package vs an R script**
 
@@ -41,7 +47,7 @@ provided in `./src/md_custom_r/process.R`.
 
 **Output dataset types**
 
-Your workflow can produce any of these dataset types. The R output list structure must match the type.
+Your workflow can produce any of these dataset types and the outputs need to be dataframes. The R output list structure must match the type.
 
 - **INTENSITY** — Required: `intensity`, `metadata`. Optional: `runtime_metadata`, `ptm_sites`
 - **PAIRWISE** — Required: `results`. Optional: `runtime_metadata`
