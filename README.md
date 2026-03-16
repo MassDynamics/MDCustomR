@@ -1,7 +1,5 @@
 # README
 
-December 2024
-
 - [Step 1: Develop the R Workflow](#step-1-develop-the-r-workflow)
 - [Step 2: Define Dependencies](#step-2-define-dependencies)
 - [Step 3: Create the Python Runner](#step-3-create-the-python-runner)
