@@ -4,7 +4,6 @@ steps:
   ################################################################################
   - block: ":warning: build and push docker images?"
     key: block_image
-    depends_on: prep
     branches: "!main"
 
   - label: ":docker: dataset package: build & push image"
