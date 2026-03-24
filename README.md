@@ -6,18 +6,24 @@
 - [Step 3: Create the Python Runner](#step-3-create-the-python-runner)
 - [Step 4: Local Validation and Testing](#step-4-local-validation-and-testing)
 - [Step 5: Create the pyproject.toml file](#step-5-create-the-pyprojecttoml-file)
-- [Step 6: # Building and Pushing to ECR](#step-6--building-and-pushing-to-ecr)
+- [Step 6: Building and Pushing to ECR](#step-6-building-and-pushing-to-ecr)
   - [What is this?](#what-is-this)
   - [Prerequisites](#prerequisites)
-  - [0. Build the base images (first time only)](#0-build-the-base-images-first-time-only)
+  - [0. Build the base images *(first time only)*](#0-build-the-base-images-first-time-only)
   - [1. Set your variables](#1-set-your-variables)
-  - [2. Create the ECR repository *( first time only)](#2-create-the-ecr-repository--first-time-only)*
+  - [2. Create the ECR repository *(first time only)*](#2-create-the-ecr-repository-first-time-only)
   - [3. Build the image](#3-build-the-image)
   - [4. Authenticate Docker with ECR](#4-authenticate-docker-with-ecr)
   - [5. Tag the image for ECR](#5-tag-the-image-for-ecr)
   - [6. Push to ECR](#6-push-to-ecr)
   - [Notes](#notes)
-- [Installation on the platform (handled by Mass Dynamics)](#installation-on-the-platform-handled-by-mass-dynamics)
+- [Step 7: Deploy the image to the platform](#step-7-deploy-the-image-to-the-platform)
+  - [Deploy via API](#deploy-via-api)
+    - [Requirements](#requirements)
+    - [Deploy script](#deploy-script)
+    - [Config fields](#config-fields)
+    - [Image versioning](#image-versioning)
+  - [Installation on the platform (handled by Mass Dynamics)](#installation-on-the-platform-handled-by-mass-dynamics)
 
 This repository provides instructions and an example for setting up a
 new custom R workflow integrated into the Mass Dynamics ecosystem.
@@ -267,9 +273,112 @@ The full image URI (needed for the deploy step) will be:
 - **Do not push a `latest` tag** — the repo is `IMMUTABLE`, so `latest` would be locked to one digest and cannot be updated. Always use versioned tags only.
 - To delete an accidentally pushed tag: `aws ecr batch-delete-image --repository-name $IMAGE_NAME --region $AWS_REGION --profile $AWS_PROFILE --image-ids imageTag=<tag>`
 
-# Step 7: Installation on the platform (handled by Mass Dynamics)
 
-At this stage, you would need to contact MD Member Success, who will coordinate with the engineering team to have your workflow installed on the platform.
+# Step 7: Deploy the image to the platform
+
+## Deploy via API
+
+If you have access to the MD platform API, you can deploy the image to the platform via API. After building and pushing a Docker image to ECR, this step registers it with the MD platform so users can run it. The platform pulls the image, extracts the form schema from `process_r.py`, and makes the workflow available in the UI.
+
+---
+
+### Requirements
+
+A `.env` file in the repo root (git-ignored):
+
+```
+MD_API_BASE_URL=https://dev.massdynamics.com/api
+MD_AUTH_TOKEN=<your token>
+```
+
+Get `MD_AUTH_TOKEN` from your MD account settings.
+
+---
+
+### Deploy script
+
+```python
+"""
+Usage: source .venv/bin/activate && python deploy.py
+Requires: .env with MD_API_BASE_URL and MD_AUTH_TOKEN
+"""
+
+import os, time, requests
+from dotenv import load_dotenv
+
+load_dotenv()
+
+BASE_URL  = os.environ["MD_API_BASE_URL"].rstrip("/")
+API_TOKEN = os.environ["MD_AUTH_TOKEN"]
+
+IMAGE    = "<account_id>.dkr.ecr.<region>.amazonaws.com/<repo_name>:<version>-<build>"
+JOB_NAME = "<Display Name in MD UI>"
+RUN_TYPE = "INTENSITY"   # INTENSITY | PAIRWISE | ANOVA | ENRICHMENT | DOSE_RESPONSE
+FLOW     = "<function name decorated with @md_r in process_r.py>"
+FLOW_PKG = "<python.module.path.to.process_r>"
+
+HEADERS = {
+    "Authorization": f"Bearer {API_TOKEN}",
+    "Accept": "application/vnd.md-v2+json",
+    "Content-Type": "application/json",
+}
+
+payload = {
+    "name": JOB_NAME,
+    "run_type": RUN_TYPE,
+    "public": False,
+    "job_deploy_request": {
+        "image": IMAGE,
+        "flow_package": FLOW_PKG,
+        "flow": FLOW,
+    },
+}
+
+resp = requests.post(f"{BASE_URL}/jobs/create_or_update", headers=HEADERS, json=payload)
+
+if resp.status_code == 201:
+    print("Deployed.")
+elif resp.status_code == 202:
+    url = BASE_URL.replace("/api", "") + resp.headers["Location"]
+    while True:
+        r = requests.get(url, headers=HEADERS)
+        if r.status_code == 201:
+            print("Deployed.")
+            break
+        elif r.status_code == 202:
+            print("  ... deploying")
+            time.sleep(5)
+        else:
+            r.raise_for_status()
+else:
+    resp.raise_for_status()
+```
+
+---
+
+### Config fields
+
+| Field | Description |
+|-------|-------------|
+| `IMAGE` | Full ECR URI — update this every time you push a new image |
+| `JOB_NAME` | Display name in the MD UI |
+| `RUN_TYPE` | Output dataset type: `INTENSITY`, `PAIRWISE`, `ANOVA`, etc. |
+| `FLOW` | The `@md_r`-decorated function name in `process_r.py` |
+| `FLOW_PKG` | Python module path to `process_r.py` |
+
+---
+
+### Image versioning
+
+Tags follow `<version>-<build>`, e.g. `0.2.0-1`. Bump the build number on each push for the same version. ECR is immutable — you cannot overwrite an existing tag.
+
+Any change to `process_r.py` (form fields, descriptions, parameters) requires a new image and a new deploy.
+
+To deploy the image to the platform, you need to follow the steps below:
+
+## Installation on the platform (handled by Mass Dynamics)
+
+If you do not have access to the MD platform API, you can deploy the image to the platform by contacting MD Member Success, who will coordinate with the engineering team to have your workflow installed on the platform.
 
 Under the hood, a new workflow is registered via the script `md-dataset-deploy` from the [MD Dataset Package](https://github.com/MassDynamics/md_dataset). For reference, this project includes `./infra` and `./scripts/deploy` with example Helm configurations - these may be useful if you need to automate deployment (e.g. via CI/CD), but installation is typically done by the Mass Dynamics team.
 
