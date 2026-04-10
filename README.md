@@ -9,7 +9,7 @@
 - [Step 6: Building and Pushing to ECR](#step-6-building-and-pushing-to-ecr)
   - [What is this?](#what-is-this)
   - [Prerequisites](#prerequisites)
-  - [0. Build the base images *(first time only)*](#0-build-the-base-images-first-time-only)
+  - [0. R base image *(first time only)*](#0-r-base-image-first-time-only)
   - [1. Set your variables](#1-set-your-variables)
   - [2. Create the ECR repository *(first time only)*](#2-create-the-ecr-repository-first-time-only)
   - [3. Build the image](#3-build-the-image)
@@ -152,17 +152,24 @@ Think of it like: *build a reproducible computational environment → ship it to
 
 ---
 
-## 0. Build the base images *(first time only)*
+## 0. R base image *(first time only)*
 
-Our image is built on top of a base image from the `[md_dataset](https://github.com/MassDynamics/md_dataset)` repo (clone or fork it first) that provides Python + R in an Amazon Linux environment. You need to build this locally first.
+The custom workflow image is built on an R base that provides Python + R on Amazon Linux. Pick **one** of the following.
+
+### A) Build the base locally
+
+Use this if you need an unpublished base or a specific `md_dataset` revision.
+
+1. Clone or fork [`md_dataset`](https://github.com/MassDynamics/md_dataset).
+2. From that repo:
 
 ```bash
 cd /path/to/your-fork-of-md_dataset
 
-# Step 1 — build the Python+R base
+# Step 1 — Python+R base
 docker build -t md_dataset_package-linux-base:latest -f base.Dockerfile --platform="linux/amd64" .
 
-# Step 2 — build the R base (this is what custom R scripts use)
+# Step 2 — R base (this is what custom R scripts use)
 docker build \
   --build-arg BASE_IMAGE=md_dataset_package-linux-base:latest \
   -t md_dataset_package-linux-r-base:latest \
@@ -170,7 +177,17 @@ docker build \
   --platform="linux/amd64" .
 ```
 
-> These builds take a while — they compile R and install system libraries. You only need to redo this if the `md_dataset` base image changes.
+> These builds take a while — they compile R and install system libraries. Re-run only when the `md_dataset` base changes.
+
+### B) Pull from Docker Hub
+
+Use this for the published R base from [Mass Dynamics on Docker Hub](https://hub.docker.com/u/massdynamics) (`md_dataset_package_r_base`).
+
+```bash
+docker pull massdynamics/md_dataset_package_r_base:latest
+```
+
+Use a specific image tag instead of `latest` if you need a fixed baseline.
 
 ---
 
@@ -216,13 +233,26 @@ aws ecr describe-repositories --repository-names $IMAGE_NAME --profile $AWS_PROF
 
 ## 3. Build the image
 
-This builds the Docker image for your custom R workflow on top of the R base image built in step 0.
+This builds the Docker image for your custom R workflow on top of the R base from step 0.
+
+**If you used 0A (local build):** pass the local tag you created (`md_dataset_package-linux-r-base:latest`). That name is only used for images you built yourself in the `md_dataset` repo.
+
+**If you used 0B (Docker Hub):** pass the image you pulled — `massdynamics/md_dataset_package_r_base` — not `md_dataset_package-linux-r-base`. After a pull, Docker knows the image by the Hub name; `linux-r-base` is a different local tag that does not exist unless you built 0A (or retagged manually). Omitting `--build-arg BASE_IMAGE=...` is equivalent here because the `Dockerfile` already defaults to `massdynamics/md_dataset_package_r_base`.
 
 ```bash
 cd /path/to/your-custom-r-repo
 
+# After step 0A (local R base from md_dataset):
 docker build \
   --build-arg BASE_IMAGE=md_dataset_package-linux-r-base:latest \
+  -t $IMAGE_NAME:$IMAGE_TAG \
+  -f Dockerfile \
+  --platform="linux/amd64" \
+  .
+
+# After step 0B (same R base stack, published on Docker Hub):
+docker build \
+  --build-arg BASE_IMAGE=massdynamics/md_dataset_package_r_base:latest \
   -t $IMAGE_NAME:$IMAGE_TAG \
   -f Dockerfile \
   --platform="linux/amd64" \
